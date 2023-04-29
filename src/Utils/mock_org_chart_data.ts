@@ -1,9 +1,11 @@
 // Import Utils
 import { generate_id, range } from "./generate_id";
 
-function build_card(): { id: string; children: any[] } {
+function build_card(): { id: string; name: string; children: any[] } {
+  let id = generate_id();
   return {
-    id: generate_id(),
+    id: id,
+    name: id,
     children: [],
   };
 }
@@ -37,7 +39,7 @@ export function mock_org_chart_data(
     for (let i = 0; i < children_count; i++) {
       remain_count--;
       let card = build_card();
-      children.push(card);
+      children.push(card.id);
       queue.push(card);
       result.push(card);
     }

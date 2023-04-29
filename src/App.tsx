@@ -14,7 +14,7 @@ import { OrgChart } from "./OrgChart/OrgChart";
 let now = performance.now();
 let data = mock_org_chart_data(100);
 let chart = new OrgChart(data);
-console.log(`${performance.now() - now}`);
+console.log(`${performance.now() - now} ms`);
 console.log(chart);
 
 function App() {
