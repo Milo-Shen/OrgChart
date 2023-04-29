@@ -8,7 +8,11 @@ function build_card(): { id: string; children: any[] } {
   };
 }
 
-export function mock_org_chart_data(count: number = 1, max_child?: number) {
+export function mock_org_chart_data(
+  count: number = 1,
+  max_child?: number,
+  is_range = false
+) {
   max_child = max_child || Math.sqrt(count);
   let result = [];
   let queue = [];
@@ -25,7 +29,10 @@ export function mock_org_chart_data(count: number = 1, max_child?: number) {
   while (queue.length) {
     let node = queue.shift();
     let children: any[] = [];
-    let children_count = range(Math.min(max_child, remain_count));
+    let children_count = Math.min(max_child, remain_count);
+    if (is_range) {
+      children_count = range(Math.min(max_child, remain_count));
+    }
 
     for (let i = 0; i < children_count; i++) {
       remain_count--;

@@ -1,31 +1,26 @@
+// Import React Framework
 import React from "react";
-import logo from "./logo.svg";
+
+// Import Customized Component
+import SimpleOrgChart from "./Component/SimpleOrgChart/SimpleOrgChart";
+
+// Import CSS
 import "./App.css";
 
 // Import Utils
 import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
+import { OrgChart } from "./OrgChart/OrgChart";
 
 let now = performance.now();
 let data = mock_org_chart_data(100);
-console.log(data, `${performance.now() - now} ms`);
+let chart = new OrgChart(data);
+console.log(`${performance.now() - now}`);
+console.log(chart);
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <SimpleOrgChart />
     </div>
   );
 }
