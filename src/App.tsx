@@ -2,6 +2,10 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+// Import Utils
+import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
+// mock_org_chart_data(100);
+
 function App() {
   return (
     <div className="App">
