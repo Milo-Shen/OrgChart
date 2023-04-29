@@ -10,17 +10,18 @@
     "@types/node": "^16.18.25",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
     "@ui5/webcomponents": "1.12.2",
     "@ui5/webcomponents-base": "1.12.2",
     "@ui5/webcomponents-fiori": "1.12.2",
     "@ui5/webcomponents-icons": "1.12.2",
     "@ui5/webcomponents-localization": "1.12.2",
-    "@ui5/webcomponents-theming": "1.12.2"
+    "@ui5/webcomponents-theming": "1.12.2",
+    "nanoid": "^4.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "prettier": "2.8.8"
   }
 }
