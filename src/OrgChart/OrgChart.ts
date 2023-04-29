@@ -12,9 +12,14 @@ class CardNode {
 
 class OrgChart {
   root?: CardNode;
+  max_width: number;
+  max_height: number;
   card_map?: Map<string, CardNode>;
 
   constructor(card_list: Array<any>) {
+    this.max_width = 0;
+    this.max_height = 0;
+
     // process exception
     let card_list_len = card_list.length;
     if (!card_list || !card_list_len) {
@@ -43,6 +48,32 @@ class OrgChart {
         card!.children.push(child!);
       }
     }
+  }
+
+  get_render_data() {
+    let render_list: Array<Array<CardNode>> = [];
+    let queue = [this.root];
+    let max_horizon_count = -1;
+
+    while (queue.length) {
+      let level_card_list: Array<CardNode> = [];
+      let len = queue.length;
+
+      for (let i = 0; i < len; i++) {
+        let card = queue.shift();
+        level_card_list.push(card!);
+
+        let children = card!.children;
+        for (let j = 0; j < children.length; j++) {
+          queue.push(children[j]);
+        }
+      }
+
+      render_list.push(level_card_list);
+      max_horizon_count = Math.max(max_horizon_count, level_card_list.length);
+    }
+
+    return { render_list, max_horizon_count };
   }
 }
 

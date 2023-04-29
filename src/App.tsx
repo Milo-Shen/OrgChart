@@ -12,10 +12,11 @@ import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
 import { OrgChart } from "./OrgChart/OrgChart";
 
 let now = performance.now();
-let data = mock_org_chart_data(100);
+let data = mock_org_chart_data(100, 5);
 let chart = new OrgChart(data);
+let render_data = chart.get_render_data();
 console.log(`${performance.now() - now} ms`);
-console.log(chart);
+console.log(chart, render_data);
 
 function App() {
   return (
