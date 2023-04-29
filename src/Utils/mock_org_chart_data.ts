@@ -1,10 +1,10 @@
 // Import Utils
-import { nanoid } from "nanoid";
+import { generate_id, range } from "./generate_id";
 
-function build_card(): { id: string; child: any[] } {
+function build_card(): { id: string; children: any[] } {
   return {
-    id: nanoid(),
-    child: [],
+    id: generate_id(),
+    children: [],
   };
 }
 
@@ -14,32 +14,33 @@ export function mock_org_chart_data(count: number = 1, max_child?: number) {
   let queue = [];
 
   // generated leaf count
-  let generated_total = 1;
+  let remain_count = count - 1;
 
   // build the root leaf
   let root = build_card();
 
+  result.push(root);
   queue.push(root);
 
   while (queue.length) {
     let node = queue.shift();
-    let temp: any[] = [];
+    let children: any[] = [];
+    let children_count = range(Math.min(max_child, remain_count));
 
-    for (let i = 0; i < max_child; i++) {
-      generated_total++;
+    for (let i = 0; i < children_count; i++) {
+      remain_count--;
       let card = build_card();
+      children.push(card);
       queue.push(card);
       result.push(card);
     }
 
-    node!.child = temp;
+    node!.children = children;
 
-    if (generated_total >= count) {
+    if (remain_count <= 0) {
       return result;
     }
   }
-
-  result.push(root);
 
   return result;
 }

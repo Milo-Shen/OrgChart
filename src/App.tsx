@@ -1,10 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 // Import Utils
 import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
-// mock_org_chart_data(100);
+
+let now = performance.now();
+let data = mock_org_chart_data(100);
+console.log(data, `${performance.now() - now} ms`);
 
 function App() {
   return (
