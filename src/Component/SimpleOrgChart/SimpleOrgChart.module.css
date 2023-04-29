@@ -1,6 +1,8 @@
 .simple_org_chart {
-    width: 176px;
-    height: 290px;
+    width: 200px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
     background: lightblue;
     border-radius: 1rem;
 }

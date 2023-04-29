@@ -16,7 +16,6 @@
     "@ui5/webcomponents-icons": "1.12.2",
     "@ui5/webcomponents-localization": "1.12.2",
     "@ui5/webcomponents-theming": "1.12.2",
-    "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
