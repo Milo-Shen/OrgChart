@@ -2,15 +2,25 @@ class CardNode {
   id: string;
   name: string;
   children: Array<CardNode>;
+  width: number;
+  height: number;
+  pos_x: number;
+  pos_y: number;
 
   constructor(id: string, name: string) {
     this.id = id;
     this.name = name;
     this.children = [];
+    this.width = 200;
+    this.height = 100;
+    this.pos_x = 0;
+    this.pos_y = 0;
   }
 }
 
 class OrgChart {
+  static horizon_gap = 10;
+
   root?: CardNode;
   max_width: number;
   max_height: number;
