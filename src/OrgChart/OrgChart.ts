@@ -64,13 +64,8 @@ class OrgChart {
     let render_list: Array<Array<CardNode>> = [];
     let queue = [this.root];
     let max_horizon_count = -1;
-    let level = 0;
 
     while (queue.length) {
-      level++;
-
-      // todo
-      console.log(level);
       let level_card_list: Array<CardNode> = [];
       let len = queue.length;
 
