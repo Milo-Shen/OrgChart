@@ -14,6 +14,7 @@ class CardNode {
     this.id = id;
     this.name = name;
     this.children = [];
+    // todo: width, height maybe useless
     this.width = 200;
     this.height = 100;
     this.pos_x = 0;
@@ -22,8 +23,6 @@ class CardNode {
 }
 
 class OrgChart {
-  static horizon_gap = 10;
-
   root?: CardNode;
   max_width: number;
   max_height: number;
