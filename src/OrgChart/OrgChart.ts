@@ -1,3 +1,6 @@
+// Import Interface
+import { LevelChartInterface } from "./OrgChartType";
+
 class CardNode {
   id: string;
   name: string;
@@ -61,11 +64,15 @@ class OrgChart {
   }
 
   get_render_data() {
-    let render_list: Array<Array<CardNode>> = [];
-    let queue = [this.root];
+    let level = 0;
     let max_horizon_count = -1;
 
+    let render_list: Array<LevelChartInterface> = [];
+    let queue = [this.root];
+
     while (queue.length) {
+      level++;
+
       let level_card_list: Array<CardNode> = [];
       let len = queue.length;
 
@@ -79,7 +86,7 @@ class OrgChart {
         }
       }
 
-      render_list.push(level_card_list);
+      render_list.push({ list: level_card_list, level });
       max_horizon_count = Math.max(max_horizon_count, level_card_list.length);
     }
 
