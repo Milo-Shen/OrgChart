@@ -1,6 +1,9 @@
 // Import Interface
 import { LevelChartInterface } from "./OrgChartType";
 
+// Import Utils
+import { find_the_most_left, find_the_most_right } from "./Utils";
+
 class CardNode {
   id: string;
   name: string;
@@ -63,9 +66,12 @@ class OrgChart {
         card!.children.push(child!);
       }
     }
+
+    // update the space for each node
+    this.update_node_space(this.root);
   }
 
-  update_node_space() {}
+  update_node_space(node: CardNode) {}
 
   get_render_data() {
     let level = 0;
