@@ -5,6 +5,7 @@ class CardNode {
   id: string;
   name: string;
   children: Array<CardNode>;
+  parent_id?: string;
   width: number;
   height: number;
   pos_x: number;
@@ -14,7 +15,8 @@ class CardNode {
     this.id = id;
     this.name = name;
     this.children = [];
-    // todo: width, height maybe useless
+    // todo: width, height, parent maybe useless
+    this.parent_id = undefined;
     this.width = 200;
     this.height = 100;
     this.pos_x = 0;
@@ -57,6 +59,7 @@ class OrgChart {
 
       for (let j = 0; j < children.length; j++) {
         let child = this.card_map.get(children[j]);
+        child!.parent_id = id;
         card!.children.push(child!);
       }
     }

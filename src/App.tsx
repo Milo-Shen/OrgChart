@@ -23,7 +23,7 @@ function App() {
     }
 
     let now = performance.now();
-    let data = mock_org_chart_data(100, 5);
+    let data = mock_org_chart_data(15, 5, false);
     let chart = new OrgChart(data);
     let render_data = chart.get_render_data();
     set_card_list(render_data.render_list);
@@ -43,6 +43,7 @@ function App() {
             <SimpleOrgChart
               key={card.id}
               name={card.name}
+              parent_id={card.parent_id}
               pos_x={card.pos_x}
               pos_y={card.pos_y}
             />
