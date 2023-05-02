@@ -48,7 +48,7 @@ function App() {
             <SimpleOrgChart
               key={card.id}
               name={card.name}
-              parent_id={card.parent_id}
+              parent_id={card.parent?.id}
               pos_x={card.pos_x}
               pos_y={card.pos_y}
             />

@@ -1,14 +1,12 @@
 // Import Interface
 import { LevelChartInterface } from "./OrgChartType";
 
-// Import Utils
-import { find_the_most_left, find_the_most_right } from "./Utils";
-
 class CardNode {
   id: string;
   name: string;
   children: Array<CardNode>;
-  parent_id?: string;
+  parent?: CardNode;
+  previous?: CardNode;
   width: number;
   height: number;
   pos_x: number;
@@ -19,7 +17,8 @@ class CardNode {
     this.name = name;
     this.children = [];
     // todo: width, height, parent maybe useless
-    this.parent_id = undefined;
+    this.parent = undefined;
+    this.previous = undefined;
     this.width = 200;
     this.height = 100;
     this.pos_x = 0;
@@ -59,10 +58,13 @@ class OrgChart {
     for (let i = 0; i < card_list_len; i++) {
       let { id, children } = card_list[i];
       let card = this.card_map.get(id);
+      let previous_card = undefined;
 
       for (let j = 0; j < children.length; j++) {
         let child = this.card_map.get(children[j]);
-        child!.parent_id = id;
+        child!.parent = card;
+        child!.previous = previous_card;
+        previous_card = child;
         card!.children.push(child!);
       }
     }
