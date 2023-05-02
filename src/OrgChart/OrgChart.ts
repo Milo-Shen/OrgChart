@@ -71,7 +71,13 @@ class OrgChart {
     this.update_node_space(this.root);
   }
 
-  update_node_space(node: CardNode) {}
+  update_node_space(node: CardNode) {
+    for (let i = 0; i < node.children.length; i++) {
+      this.update_node_space(node.children[i]);
+    }
+
+    console.log(node.id);
+  }
 
   get_render_data() {
     let level = 0;
