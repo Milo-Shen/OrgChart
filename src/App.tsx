@@ -26,9 +26,10 @@ function App() {
     let data = mock_org_chart_data(15, 5, false);
     let chart = new OrgChart(data);
     let render_data = chart.get_render_data();
-    set_card_list(render_data.render_list);
+    set_card_list(render_data);
     console.log(`${performance.now() - now} ms`);
-    console.log(chart, render_data);
+    console.log(chart);
+    console.log(render_data);
 
     return () => {
       is_fetch.current = true;

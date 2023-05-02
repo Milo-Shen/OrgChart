@@ -65,9 +65,10 @@ class OrgChart {
     }
   }
 
+  update_node_space() {}
+
   get_render_data() {
     let level = 0;
-    let max_horizon_count = -1;
 
     let render_list: Array<LevelChartInterface> = [];
     let queue = [this.root];
@@ -89,10 +90,9 @@ class OrgChart {
       }
 
       render_list.push({ list: level_card_list, level });
-      max_horizon_count = Math.max(max_horizon_count, level_card_list.length);
     }
 
-    return { render_list, max_horizon_count };
+    return render_list;
   }
 }
 
