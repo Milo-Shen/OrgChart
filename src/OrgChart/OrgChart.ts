@@ -29,6 +29,7 @@ class CardNode {
 class OrgChart {
   root?: CardNode;
   first_visited: boolean;
+  previous_card?: CardNode;
   card_map?: Map<string, CardNode>;
 
   constructor(card_list: Array<any>) {
@@ -82,6 +83,25 @@ class OrgChart {
     if (this.first_visited && node.previous === undefined) {
       node.pos_x = 1;
       this.first_visited = false;
+      this.previous_card = node;
+      return;
+    }
+
+    if (node.previous === this.previous_card) {
+      node.pos_x = node.previous!.pos_x + 1;
+      this.previous_card = node;
+      return;
+    }
+
+    if (this.previous_card?.parent === node) {
+      if (node.children.length === 1) {
+        node.pos_x = this.previous_card.pos_x;
+      } else {
+        node.pos_x = this.previous_card.pos_x / 2;
+      }
+
+      this.previous_card = node;
+      return;
     }
   }
 
