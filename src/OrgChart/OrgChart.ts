@@ -28,13 +28,11 @@ class CardNode {
 
 class OrgChart {
   root?: CardNode;
-  max_width: number;
-  max_height: number;
+  first_visited: boolean;
   card_map?: Map<string, CardNode>;
 
   constructor(card_list: Array<any>) {
-    this.max_width = 0;
-    this.max_height = 0;
+    this.first_visited = true;
 
     // process exception
     let card_list_len = card_list.length;
@@ -78,7 +76,13 @@ class OrgChart {
       this.update_node_space(node.children[i]);
     }
 
+    // todo: for test only
     console.log(node.id);
+
+    if (this.first_visited && node.previous === undefined) {
+      node.pos_x = 1;
+      this.first_visited = false;
+    }
   }
 
   get_render_data() {

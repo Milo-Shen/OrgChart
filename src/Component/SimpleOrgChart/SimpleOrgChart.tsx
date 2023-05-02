@@ -11,6 +11,8 @@ function OrgChart(props: any) {
       {name}
       <br />
       {parent_id}
+      <br />
+      {pos_x}
     </div>
   );
 }
