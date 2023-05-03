@@ -1,6 +1,9 @@
 // Import Interface
 import { LevelChartInterface } from "./OrgChartType";
 
+// Import Utils
+import { is_even } from "../Utils/even";
+
 class CardNode {
   id: string;
   name: string;
@@ -80,6 +83,7 @@ class OrgChart {
     // todo: for test only
     console.log(node.id);
 
+    // the first left node
     if (this.first_visited && node.previous === undefined) {
       node.pos_x = 1;
       this.first_visited = false;
@@ -87,17 +91,23 @@ class OrgChart {
       return;
     }
 
+    // nodes belongs to a same parent node
     if (node.previous === this.previous_card) {
       node.pos_x = node.previous!.pos_x + 1;
       this.previous_card = node;
       return;
     }
 
+    // go to the father node
     if (this.previous_card?.parent === node) {
       if (node.children.length === 1) {
+        // if the parent only has one child, the pos_x of the parent node will as same as the child
         node.pos_x = this.previous_card.pos_x;
+      } else if (!is_even(node.children.length)) {
+        let start = node.children[0].pos_x;
+        let end = node.children[node.children.length - 1].pos_x;
+        node.pos_x = start + ~~((end - start) / 2);
       } else {
-        node.pos_x = this.previous_card.pos_x / 2;
       }
 
       this.previous_card = node;
