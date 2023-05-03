@@ -123,21 +123,40 @@ class OrgChart {
 
     // calculate the pos_x
     let min_pos_x = -Infinity;
+    let max_node = undefined;
     let work_node = node;
 
     while (work_node.previous !== this.previous_card) {
       let level_prev_pos_x = work_node.level_previous?.pos_x || -Infinity;
-      min_pos_x = Math.max(level_prev_pos_x, min_pos_x);
+      if (level_prev_pos_x > min_pos_x) {
+        min_pos_x = level_prev_pos_x;
+        max_node = work_node.level_previous;
+      }
       work_node = work_node.parent!;
     }
 
     let prev_pos_x = this.previous_card?.pos_x || -Infinity;
-    min_pos_x = Math.max(prev_pos_x, min_pos_x);
+    if (prev_pos_x > min_pos_x) {
+      min_pos_x = prev_pos_x;
+      max_node = this.previous_card;
+    }
 
     let diff = 0;
     work_node = node;
-    while (work_node.previous !== this.previous_card) {
-      console.log(`parent:${work_node.parent?.id}`);
+    while (work_node.level_previous !== max_node) {
+      let parent = work_node.parent;
+      if (parent && parent.children.length === 1) {
+        diff -= 0;
+      }
+
+      if (parent && is_even(parent.children.length)) {
+      }
+
+      if (parent && !is_even(parent.children.length)) {
+      }
+
+      console.log(`parent:${parent?.id}`);
+
       work_node = work_node.parent!;
     }
 
