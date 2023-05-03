@@ -123,6 +123,27 @@ class OrgChart {
 
     // calculate the pos_x
     let min_pos_x = -Infinity;
+    let work_node = node;
+
+    while (work_node.previous !== this.previous_card) {
+      let level_prev_pos_x = work_node.level_previous?.pos_x || -Infinity;
+      min_pos_x = Math.max(level_prev_pos_x, min_pos_x);
+      work_node = work_node.parent!;
+    }
+
+    let prev_pos_x = this.previous_card?.pos_x || -Infinity;
+    min_pos_x = Math.max(prev_pos_x, min_pos_x);
+
+    let diff = 0;
+    work_node = node;
+    while (work_node.previous !== this.previous_card) {
+      console.log(`parent:${work_node.parent?.id}`);
+      work_node = work_node.parent!;
+    }
+
+    this.previous_card = node;
+
+    console.log(`min_pos_x: ${min_pos_x}`);
   }
 
   generate_level_prev_card_relationship() {
