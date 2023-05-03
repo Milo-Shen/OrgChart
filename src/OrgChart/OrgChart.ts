@@ -108,6 +108,9 @@ class OrgChart {
         let end = node.children[node.children.length - 1].pos_x;
         node.pos_x = start + ~~((end - start) / 2);
       } else {
+        let start = node.children[0].pos_x;
+        let end = node.children[node.children.length - 1].pos_x;
+        node.pos_x = (start + end) / 2;
       }
 
       this.previous_card = node;
