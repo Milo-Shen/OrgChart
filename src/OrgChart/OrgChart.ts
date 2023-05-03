@@ -3,6 +3,7 @@ import { LevelChartInterface } from "./OrgChartType";
 
 // Import Utils
 import { is_even } from "../Utils/even";
+import { unwatchFile } from "fs";
 
 class CardNode {
   id: string;
@@ -10,6 +11,7 @@ class CardNode {
   children: Array<CardNode>;
   parent?: CardNode;
   previous?: CardNode;
+  level_previous?: CardNode;
   width: number;
   height: number;
   pos_x: number;
@@ -22,6 +24,7 @@ class CardNode {
     // todo: width, height, parent maybe useless
     this.parent = undefined;
     this.previous = undefined;
+    this.level_previous = undefined;
     this.width = 200;
     this.height = 100;
     this.pos_x = 0;
@@ -70,7 +73,8 @@ class OrgChart {
         card!.children.push(child!);
       }
     }
-
+    // build the level previous relationship
+    this.generate_level_prev_card_relationship();
     // update the space for each node
     this.update_node_space(this.root);
   }
@@ -115,6 +119,29 @@ class OrgChart {
 
       this.previous_card = node;
       return;
+    }
+
+    // calculate the pos_x
+    let min_pos_x = -Infinity;
+  }
+
+  generate_level_prev_card_relationship() {
+    let queue = [this.root];
+
+    while (queue.length) {
+      let len = queue.length;
+      let pre_level_card = undefined;
+
+      for (let i = 0; i < len; i++) {
+        let card = queue.shift();
+        card!.level_previous = pre_level_card;
+        pre_level_card = card;
+
+        let children = card!.children;
+        for (let j = 0; j < children.length; j++) {
+          queue.push(children[j]);
+        }
+      }
     }
   }
 
