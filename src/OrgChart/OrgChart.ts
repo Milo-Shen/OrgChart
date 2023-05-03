@@ -4,6 +4,7 @@ import { LevelChartInterface } from "./OrgChartType";
 // Import Utils
 import { is_even } from "../Utils/even";
 import { unwatchFile } from "fs";
+import { d } from "@pmmmwh/react-refresh-webpack-plugin/types/options";
 
 class CardNode {
   id: string;
@@ -108,6 +109,7 @@ class OrgChart {
         // if the parent only has one child, the pos_x of the parent node will as same as the child
         node.pos_x = this.previous_card.pos_x;
       } else if (!is_even(node.children.length)) {
+        // todo:这里的计算存在问题，需要修正
         let start = node.children[0].pos_x;
         let end = node.children[node.children.length - 1].pos_x;
         node.pos_x = start + ~~((end - start) / 2);
@@ -141,6 +143,8 @@ class OrgChart {
       max_node = this.previous_card;
     }
 
+    min_pos_x += 1;
+
     let diff = 0;
     work_node = node;
     while (work_node.level_previous !== max_node) {
@@ -150,15 +154,19 @@ class OrgChart {
       }
 
       if (parent && is_even(parent.children.length)) {
+        // todo
       }
 
       if (parent && !is_even(parent.children.length)) {
+        // todo
       }
 
       console.log(`parent:${parent?.id}`);
 
       work_node = work_node.parent!;
     }
+
+    node.pos_x = min_pos_x + diff;
 
     this.previous_card = node;
 
