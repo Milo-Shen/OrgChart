@@ -2,9 +2,7 @@
 import { LevelChartInterface } from "./OrgChartType";
 
 // Import Utils
-import { is_even } from "../Utils/even";
-import { unwatchFile } from "fs";
-import { d } from "@pmmmwh/react-refresh-webpack-plugin/types/options";
+import { is_even } from "./utils";
 
 class CardNode {
   id: string;
@@ -28,7 +26,7 @@ class CardNode {
     this.level_previous = undefined;
     this.width = 200;
     this.height = 100;
-    this.pos_x = 0;
+    this.pos_x = -Infinity;
     this.pos_y = 0;
   }
 }
@@ -122,54 +120,7 @@ class OrgChart {
       return;
     }
 
-    // calculate the pos_x
-    let min_pos_x = -Infinity;
-    let max_node = undefined;
-    let work_node = node;
-
-    while (work_node.previous !== this.previous_card) {
-      let level_prev_pos_x = work_node.level_previous?.pos_x || -Infinity;
-      if (level_prev_pos_x > min_pos_x) {
-        min_pos_x = level_prev_pos_x;
-        max_node = work_node.level_previous;
-      }
-      work_node = work_node.parent!;
-    }
-
-    let prev_pos_x = this.previous_card?.pos_x || -Infinity;
-    if (prev_pos_x > min_pos_x) {
-      min_pos_x = prev_pos_x;
-      max_node = this.previous_card;
-    }
-
-    min_pos_x += 1;
-
-    let diff = 0;
-    work_node = node;
-    while (work_node.level_previous !== max_node) {
-      let parent = work_node.parent;
-      if (parent && parent.children.length === 1) {
-        diff -= 0;
-      }
-
-      if (parent && is_even(parent.children.length)) {
-        // todo
-      }
-
-      if (parent && !is_even(parent.children.length)) {
-        // todo
-      }
-
-      console.log(`parent:${parent?.id}`);
-
-      work_node = work_node.parent!;
-    }
-
-    node.pos_x = min_pos_x + diff;
-
-    this.previous_card = node;
-
-    console.log(`min_pos_x: ${min_pos_x}`);
+    // todo
   }
 
   generate_level_prev_card_relationship() {
