@@ -108,11 +108,10 @@ class OrgChart {
       if (node.children.length === 1) {
         // if the parent only has one child, the pos_x of the parent node will as same as the child
         node.pos_x = this.previous_card.pos_x;
+        // odd number case
       } else if (!is_even(node.children.length)) {
-        // todo:这里的计算存在问题，需要修正
-        let start = node.children[0].pos_x;
-        let end = node.children[node.children.length - 1].pos_x;
-        node.pos_x = start + ~~((end - start) / 2);
+        let mid_pos = ~~(node.children.length / 2);
+        node.pos_x = node.children[mid_pos].pos_x;
       } else {
         let start = node.children[0].pos_x;
         let end = node.children[node.children.length - 1].pos_x;
