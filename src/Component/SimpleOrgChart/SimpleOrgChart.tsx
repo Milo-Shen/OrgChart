@@ -7,7 +7,10 @@ import OrgChartStyle from "./SimpleOrgChart.module.css";
 function OrgChart(props: any) {
   const { name, parent_id, pos_x, pos_y } = props;
   return (
-    <div className={OrgChartStyle.simple_org_chart}>
+    <div
+      style={{ left: `${pos_x * 210}px` }}
+      className={OrgChartStyle.simple_org_chart}
+    >
       {name}
       <br />
       {parent_id}

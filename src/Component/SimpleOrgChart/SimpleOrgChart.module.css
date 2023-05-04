@@ -1,4 +1,5 @@
 .simple_org_chart {
+    position: absolute;
     font-size: 1rem;
     display: inline-block;
     width: 200px;
@@ -6,5 +7,5 @@
     text-align: center;
     background: lightblue;
     border-radius: 1rem;
-    margin-left: 0.625rem;
+    margin-right: 0.625rem;
 }
