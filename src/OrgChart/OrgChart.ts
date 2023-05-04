@@ -75,7 +75,31 @@ class OrgChart {
     this.update_node_space(this.root);
   }
 
-  readjust_pos_of_subtree(node: CardNode) {}
+  readjust_pos_of_subtree(node: CardNode) {
+    if (node.level_previous) {
+      let min_pos = node.level_previous.pos_x + 1;
+      if (min_pos < node.pos_x) {
+        return;
+      }
+
+      // todo: for test only
+      console.log(
+        `node: ${node.id}, level_previous: ${node.level_previous?.pos_x}`
+      );
+
+      let diff = min_pos - node.pos_x;
+      let queue = [node];
+
+      while (queue.length) {
+        let node = queue.shift();
+        node!.pos_x = node!.pos_x + diff;
+        let children = node!.children;
+        for (let i = 0; i < children.length; i++) {
+          queue.push(children[i]);
+        }
+      }
+    }
+  }
 
   update_node_space(node: CardNode) {
     for (let i = 0; i < node.children.length; i++) {
@@ -83,7 +107,7 @@ class OrgChart {
     }
 
     // todo: for test only
-    console.log(node.id);
+    console.log(`node id: ${node.id}`);
 
     // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
@@ -103,6 +127,7 @@ class OrgChart {
     // go to the father node
     if (this.previous_card?.parent === node) {
       if (node.children.length === 1) {
+        // todo: performance optimization -> readjust_pos_of_subtree ?
         // if the parent only has one child, the pos_x of the parent node will as same as the child
         node.pos_x = this.previous_card.pos_x;
         // odd number case
