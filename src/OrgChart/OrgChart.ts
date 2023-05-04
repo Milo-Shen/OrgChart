@@ -2,7 +2,7 @@
 import { LevelChartInterface } from "./OrgChartType";
 
 // Import Utils
-import { is_even } from "./utils";
+import { is_even, is_leaf } from "./utils";
 
 class CardNode {
   id: string;
@@ -33,13 +33,10 @@ class CardNode {
 
 class OrgChart {
   root?: CardNode;
-  first_visited: boolean;
   previous_card?: CardNode;
   card_map?: Map<string, CardNode>;
 
   constructor(card_list: Array<any>) {
-    this.first_visited = true;
-
     // process exception
     let card_list_len = card_list.length;
     if (!card_list || !card_list_len) {
@@ -78,6 +75,8 @@ class OrgChart {
     this.update_node_space(this.root);
   }
 
+  readjust_pos_of_subtree(node: CardNode) {}
+
   update_node_space(node: CardNode) {
     for (let i = 0; i < node.children.length; i++) {
       this.update_node_space(node.children[i]);
@@ -86,15 +85,15 @@ class OrgChart {
     // todo: for test only
     console.log(node.id);
 
-    // the first left node
-    if (this.first_visited && node.previous === undefined) {
+    // most left node of each subtree
+    if (is_leaf(node) && node.previous === undefined) {
       node.pos_x = 1;
-      this.first_visited = false;
+      this.readjust_pos_of_subtree(node);
       this.previous_card = node;
       return;
     }
 
-    // nodes belongs to a same parent node
+    // sibling node
     if (node.previous === this.previous_card) {
       node.pos_x = node.previous!.pos_x + 1;
       this.previous_card = node;
@@ -116,11 +115,10 @@ class OrgChart {
         node.pos_x = (start + end) / 2;
       }
 
+      this.readjust_pos_of_subtree(node);
       this.previous_card = node;
       return;
     }
-
-    // todo
   }
 
   generate_level_prev_card_relationship() {
