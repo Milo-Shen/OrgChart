@@ -2,8 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 // Import Customized Component
-import SimpleOrgChart from "./Component/SimpleOrgChart/SimpleOrgChart";
-import LevelContainer from "./Component/LevelContainer/LevelContainer";
+import Chart from "./Component/Chart/Chart";
 
 // Import Interfaces
 import { LevelChartInterface } from "./OrgChart/OrgChartType";
@@ -46,19 +45,7 @@ function App() {
 
   return (
     <div className="App">
-      {card_list.map((level) => (
-        <LevelContainer key={level.level}>
-          {level.list.map((card) => (
-            <SimpleOrgChart
-              key={card.id}
-              name={card.name}
-              parent_id={card.parent?.id}
-              pos_x={card.pos_x}
-              pos_y={card.pos_y}
-            />
-          ))}
-        </LevelContainer>
-      ))}
+      <Chart list={card_list} />
     </div>
   );
 }
