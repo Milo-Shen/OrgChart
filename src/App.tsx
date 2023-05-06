@@ -31,7 +31,7 @@ function App() {
     // data[7].children.push("id=11");
     // data.push({ children: ["id=12"], id: "id=11", name: "id=11" });
     // data.push({ children: [], id: "id=12", name: "id=12" });
-    let chart = new OrgChart(data);
+    let chart = new OrgChart(data, true, 200, 100, 10);
     let render_data = chart.get_render_data();
     set_card_list(render_data);
     console.log(`${performance.now() - now} ms`);

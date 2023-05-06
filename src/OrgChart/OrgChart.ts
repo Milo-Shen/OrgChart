@@ -11,8 +11,8 @@ class CardNode {
   parent?: CardNode;
   previous?: CardNode;
   level_previous?: CardNode;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   pos_x: number;
   pos_y: number;
 
@@ -20,12 +20,11 @@ class CardNode {
     this.id = id;
     this.name = name;
     this.children = [];
-    // todo: width, height, parent maybe useless
     this.parent = undefined;
     this.previous = undefined;
     this.level_previous = undefined;
-    this.width = 200;
-    this.height = 100;
+    this.width = 0;
+    this.height = 0;
     this.pos_x = -Infinity;
     this.pos_y = 0;
   }
@@ -35,8 +34,25 @@ class OrgChart {
   root?: CardNode;
   previous_card?: CardNode;
   card_map?: Map<string, CardNode>;
+  fixed_size: boolean;
+  fixed_width?: number;
+  fixed_height?: number;
+  min_gap: number;
 
-  constructor(card_list: Array<any>) {
+  constructor(
+    card_list: Array<any>,
+    // todo: typescript enhancement
+    fixed_size: boolean = true,
+    fixed_width?: number,
+    fixed_height?: number,
+    min_gap = 10
+  ) {
+    // initialization
+    this.fixed_size = fixed_size;
+    this.fixed_width = fixed_width;
+    this.fixed_height = fixed_height;
+    this.min_gap = min_gap;
+
     // process exception
     let card_list_len = card_list.length;
     if (!card_list || !card_list_len) {
@@ -69,6 +85,7 @@ class OrgChart {
         card!.children.push(child!);
       }
     }
+
     // build the level previous relationship
     this.generate_level_prev_card_relationship();
     // update the space for each node
