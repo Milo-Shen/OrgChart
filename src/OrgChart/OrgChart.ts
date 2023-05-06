@@ -15,6 +15,8 @@ class CardNode {
   height?: number;
   ratio_pos_x: number;
   ratio_pos_y: number;
+  pos_x: number;
+  pos_y: number;
 
   constructor(id: string, name: string) {
     this.id = id;
@@ -27,6 +29,8 @@ class CardNode {
     this.height = 0;
     this.ratio_pos_x = -Infinity;
     this.ratio_pos_y = 0;
+    this.pos_x = -Infinity;
+    this.pos_y = 0;
   }
 }
 
