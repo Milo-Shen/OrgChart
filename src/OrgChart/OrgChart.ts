@@ -41,7 +41,10 @@ class OrgChart {
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
-  min_gap: number;
+  fixed_overall_width?: number;
+  fixed_overall_height?: number;
+  horizon_gap: number;
+  vertical_gap: number;
 
   constructor(
     card_list: Array<any>,
@@ -49,13 +52,19 @@ class OrgChart {
     fixed_size: boolean = true,
     fixed_width?: number,
     fixed_height?: number,
-    min_gap = 10
+    horizon_gap = 10,
+    vertical_gap = 40
   ) {
     // initialization
     this.fixed_size = fixed_size;
     this.fixed_width = fixed_width;
     this.fixed_height = fixed_height;
-    this.min_gap = min_gap;
+    this.horizon_gap = horizon_gap;
+    this.vertical_gap = vertical_gap;
+
+    if (fixed_size && fixed_width) {
+      this.fixed_overall_width = fixed_width + horizon_gap;
+    }
 
     // process exception
     let card_list_len = card_list.length;
