@@ -13,8 +13,8 @@ class CardNode {
   level_previous?: CardNode;
   width?: number;
   height?: number;
-  pos_x: number;
-  pos_y: number;
+  ratio_pos_x: number;
+  ratio_pos_y: number;
 
   constructor(id: string, name: string) {
     this.id = id;
@@ -25,8 +25,8 @@ class CardNode {
     this.level_previous = undefined;
     this.width = 0;
     this.height = 0;
-    this.pos_x = -Infinity;
-    this.pos_y = 0;
+    this.ratio_pos_x = -Infinity;
+    this.ratio_pos_y = 0;
   }
 }
 
@@ -94,22 +94,22 @@ class OrgChart {
 
   readjust_pos_of_subtree(node: CardNode) {
     if (node.level_previous) {
-      let min_pos = node.level_previous.pos_x + 1;
-      if (min_pos < node.pos_x) {
+      let min_pos = node.level_previous.ratio_pos_x + 1;
+      if (min_pos < node.ratio_pos_x) {
         return;
       }
 
       // todo: for test only
       console.log(
-        `node: ${node.id}, level_previous: ${node.level_previous?.pos_x}`
+        `node: ${node.id}, level_previous: ${node.level_previous?.ratio_pos_x}`
       );
 
-      let diff = min_pos - node.pos_x;
+      let diff = min_pos - node.ratio_pos_x;
       let queue = [node];
 
       while (queue.length) {
         let node = queue.shift();
-        node!.pos_x = node!.pos_x + diff;
+        node!.ratio_pos_x = node!.ratio_pos_x + diff;
         let children = node!.children;
         for (let i = 0; i < children.length; i++) {
           queue.push(children[i]);
@@ -128,7 +128,7 @@ class OrgChart {
 
     // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
-      node.pos_x = 1;
+      node.ratio_pos_x = 1;
       this.readjust_pos_of_subtree(node);
       this.previous_card = node;
       return;
@@ -136,7 +136,7 @@ class OrgChart {
 
     // sibling node
     if (node.previous === this.previous_card) {
-      node.pos_x = node.previous!.pos_x + 1;
+      node.ratio_pos_x = node.previous!.ratio_pos_x + 1;
       this.previous_card = node;
       return;
     }
@@ -145,16 +145,16 @@ class OrgChart {
     if (this.previous_card?.parent === node) {
       if (node.children.length === 1) {
         // todo: performance optimization -> readjust_pos_of_subtree ?
-        // if the parent only has one child, the pos_x of the parent node will as same as the child
-        node.pos_x = this.previous_card.pos_x;
+        // if the parent only has one child, the ratio_pos_x of the parent node will as same as the child
+        node.ratio_pos_x = this.previous_card.ratio_pos_x;
         // odd number case
       } else if (!is_even(node.children.length)) {
         let mid_pos = ~~(node.children.length / 2);
-        node.pos_x = node.children[mid_pos].pos_x;
+        node.ratio_pos_x = node.children[mid_pos].ratio_pos_x;
       } else {
-        let start = node.children[0].pos_x;
-        let end = node.children[node.children.length - 1].pos_x;
-        node.pos_x = (start + end) / 2;
+        let start = node.children[0].ratio_pos_x;
+        let end = node.children[node.children.length - 1].ratio_pos_x;
+        node.ratio_pos_x = (start + end) / 2;
       }
 
       this.readjust_pos_of_subtree(node);

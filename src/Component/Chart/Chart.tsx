@@ -27,8 +27,8 @@ function Chart(props: ChartPropsInterface) {
               key={card.id}
               name={card.name}
               parent_id={card.parent?.id}
-              pos_x={card.pos_x}
-              pos_y={card.pos_y}
+              pos_x={card.ratio_pos_x}
+              pos_y={card.ratio_pos_y}
             />
           ))}
         </LevelContainer>
