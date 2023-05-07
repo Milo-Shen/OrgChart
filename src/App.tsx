@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 // Import Customized Component
 import Chart from "./Component/Chart/Chart";
+import SimpleOrgChart from "./Component/SimpleOrgChart";
 
 // Import Utils
 import { CardNode, OrgChart } from "./OrgChart/OrgChart";
@@ -43,7 +44,20 @@ function App() {
 
   return (
     <div className="App">
-      <Chart list={card_list} />
+      <Chart
+        list={card_list}
+        card_template={(card: CardNode) => (
+          <SimpleOrgChart
+            key={card.id}
+            name={card.name}
+            parent_id={card.parent?.id}
+            ratio_pos_x={card.ratio_pos_x}
+            ratio_pos_y={card.ratio_pos_y}
+            pos_x={card.pos_x}
+            pos_y={card.pos_y}
+          />
+        )}
+      />
     </div>
   );
 }

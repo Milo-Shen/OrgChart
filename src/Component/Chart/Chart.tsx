@@ -14,25 +14,16 @@ import { DoubleLinkedList } from "../../OrgChart/DoubleLinkedList";
 // Interface
 interface ChartPropsInterface {
   list: CardNode[] | DoubleLinkedList;
+  card_template: (card: CardNode) => ReactNode;
   children?: ReactNode | ReactNode[];
 }
 
 function Chart(props: ChartPropsInterface) {
-  const { list } = props;
+  const { list, card_template } = props;
 
   return (
     <div className={ChartStyle.chart}>
-      {list.map((card) => (
-        <SimpleOrgChart
-          key={card.id}
-          name={card.name}
-          parent_id={card.parent?.id}
-          ratio_pos_x={card.ratio_pos_x}
-          ratio_pos_y={card.ratio_pos_y}
-          pos_x={card.pos_x}
-          pos_y={card.pos_y}
-        />
-      ))}
+      {list.map((card) => card_template(card))}
     </div>
   );
 }
