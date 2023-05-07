@@ -5,17 +5,19 @@ import React from "react";
 import OrgChartStyle from "./SimpleOrgChart.module.css";
 
 function OrgChart(props: any) {
-  const { name, parent_id, pos_x, pos_y } = props;
+  const { name, parent_id, pos_x, pos_y, ratio_pos_x, ratio_pos_y } = props;
   return (
     <div
-      style={{ left: `${pos_x * 200}px` }}
+      style={{ left: `${pos_x}px`, top: `${pos_y}px` }}
       className={OrgChartStyle.simple_org_chart}
     >
-      {name}
+      id: {name}
       <br />
-      {parent_id}
+      parent: {parent_id}
       <br />
-      {pos_x}
+      ratio_pos_x: {ratio_pos_x}
+      <br />
+      ratio_pos_y: {ratio_pos_y}
     </div>
   );
 }

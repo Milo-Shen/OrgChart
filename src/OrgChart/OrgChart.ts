@@ -113,14 +113,17 @@ class OrgChart {
   }
 
   generate_level_prev_card_relationship() {
+    let level = -1;
     let queue = [this.root];
 
     while (queue.length) {
+      level++;
       let len = queue.length;
       let pre_level_card = undefined;
 
       for (let i = 0; i < len; i++) {
         let card = queue.shift();
+        card!.ratio_pos_y = level;
         card!.level_previous = pre_level_card;
         pre_level_card = card;
 
@@ -148,19 +151,16 @@ class OrgChart {
 
     // go to the parent node
     this.update_node_horizon_space_parent_node(node);
+
+    // convert coordinate ratio to detailed coordinate value
+    this.convert_ratio_coordinate_to_detail_val(node);
   }
 
   update_node_horizon_space_most_left_leaf(node: CardNode) {
     // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
-      node.ratio_pos_x = 1;
-
-      // convert coordinate ratio to detailed coordinate value
-      if (this.fixed_overall_width) {
-        node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
-      }
-
-      this.readjust_pos_of_subtree(node);
+      node.ratio_pos_x = 0;
+      this.readjust_horizon_pos_of_subtree(node);
       this.previous_card = node;
       return;
     }
@@ -178,7 +178,7 @@ class OrgChart {
   update_node_horizon_space_parent_node(node: CardNode) {
     if (this.previous_card?.parent === node) {
       if (node.children.length === 1) {
-        // todo: performance optimization -> readjust_pos_of_subtree ?
+        // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
         // if the parent only has one child, the ratio_pos_x of the parent node will as same as the child
         node.ratio_pos_x = this.previous_card.ratio_pos_x;
         // odd number case
@@ -191,13 +191,24 @@ class OrgChart {
         node.ratio_pos_x = (start + end) / 2;
       }
 
-      this.readjust_pos_of_subtree(node);
+      this.readjust_horizon_pos_of_subtree(node);
       this.previous_card = node;
       return;
     }
   }
 
-  readjust_pos_of_subtree(node: CardNode) {
+  convert_ratio_coordinate_to_detail_val(node: CardNode) {
+    // convert coordinate ratio to detailed coordinate value
+    if (this.fixed_overall_width) {
+      node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
+    }
+
+    if (this.fixed_overall_height) {
+      node.pos_y = node.ratio_pos_y * this.fixed_overall_height;
+    }
+  }
+
+  readjust_horizon_pos_of_subtree(node: CardNode) {
     if (node.level_previous) {
       let min_pos = node.level_previous.ratio_pos_x + 1;
       if (min_pos < node.ratio_pos_x) {

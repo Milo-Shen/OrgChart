@@ -3,12 +3,12 @@ import React, { ReactNode } from "react";
 
 // Import Customized Component
 import SimpleOrgChart from "../SimpleOrgChart";
-import LevelContainer from "../LevelContainer";
 
 // Import Interface
 import { LevelChartInterface } from "../../OrgChart/OrgChartType";
 
 // Import CSS
+import ChartStyle from "./Chart.module.css";
 
 // Interface
 interface ChartPropsInterface {
@@ -17,22 +17,22 @@ interface ChartPropsInterface {
 }
 
 function Chart(props: ChartPropsInterface) {
-  const { list, children } = props;
+  const { list } = props;
   return (
-    <div>
-      {list.map((level) => (
-        <LevelContainer key={level.level}>
-          {level.list.map((card) => (
-            <SimpleOrgChart
-              key={card.id}
-              name={card.name}
-              parent_id={card.parent?.id}
-              pos_x={card.ratio_pos_x}
-              pos_y={card.ratio_pos_y}
-            />
-          ))}
-        </LevelContainer>
-      ))}
+    <div className={ChartStyle.chart}>
+      {list.map((level) =>
+        level.list.map((card) => (
+          <SimpleOrgChart
+            key={card.id}
+            name={card.name}
+            parent_id={card.parent?.id}
+            ratio_pos_x={card.ratio_pos_x}
+            ratio_pos_y={card.ratio_pos_y}
+            pos_x={card.pos_x}
+            pos_y={card.pos_y}
+          />
+        ))
+      )}
     </div>
   );
 }
