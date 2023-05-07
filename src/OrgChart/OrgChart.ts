@@ -87,15 +87,15 @@ class OrgChart {
     // establish relationship between nodes
     for (let i = 0; i < card_list_len; i++) {
       let { id, children } = card_list[i];
-      let card = this.card_map.get(id);
+      let card = this.card_map.get(id)!;
       let previous_card = undefined;
 
       for (let j = 0; j < children.length; j++) {
-        let child = this.card_map.get(children[j]);
-        child!.parent = card;
-        child!.previous = previous_card;
+        let child = this.card_map.get(children[j])!;
+        child.parent = card;
+        child.previous = previous_card;
         previous_card = child;
-        card!.children.push(child!);
+        card.children.push(child!);
       }
     }
 
@@ -143,6 +143,7 @@ class OrgChart {
     if (is_leaf(node) && node.previous === undefined) {
       node.ratio_pos_x = 1;
 
+      // convert coordinate ratio to detailed coordinate value
       if (this.fixed_overall_width) {
         node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
       }
