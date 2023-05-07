@@ -4,17 +4,14 @@ import React, { useEffect, useRef, useState } from "react";
 // Import Customized Component
 import Chart from "./Component/Chart/Chart";
 
-// Import Interfaces
-import { LevelChartInterface } from "./OrgChart/OrgChartType";
-
 // Import Utils
-import { OrgChart } from "./OrgChart/OrgChart";
+import { CardNode, OrgChart } from "./OrgChart/OrgChart";
 import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
 
 function App() {
   let is_fetch = useRef(false);
 
-  let [card_list, set_card_list] = useState<Array<LevelChartInterface>>([]);
+  let [card_list, set_card_list] = useState<Array<CardNode>>([]);
 
   useEffect(() => {
     if (is_fetch.current) {

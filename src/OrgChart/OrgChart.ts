@@ -1,6 +1,3 @@
-// Import Interface
-import { LevelChartInterface } from "./OrgChartType";
-
 // Import Utils
 import { is_even, is_leaf } from "./utils";
 
@@ -230,28 +227,17 @@ class OrgChart {
   }
 
   get_render_data() {
-    let level = 0;
-
-    let render_list: Array<LevelChartInterface> = [];
+    let render_list: Array<CardNode> = [];
     let queue = [this.root];
 
     while (queue.length) {
-      level++;
+      let card = queue.shift()!;
+      render_list.push(card);
 
-      let level_card_list: Array<CardNode> = [];
-      let len = queue.length;
-
-      for (let i = 0; i < len; i++) {
-        let card = queue.shift();
-        level_card_list.push(card!);
-
-        let children = card!.children;
-        for (let j = 0; j < children.length; j++) {
-          queue.push(children[j]);
-        }
+      let children = card!.children;
+      for (let j = 0; j < children.length; j++) {
+        queue.push(children[j]);
       }
-
-      render_list.push({ list: level_card_list, level });
     }
 
     return render_list;
