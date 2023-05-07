@@ -62,13 +62,13 @@ class OrgChart {
     this.horizon_gap = horizon_gap;
     this.vertical_gap = vertical_gap;
 
-    if (fixed_size && fixed_width) {
+    if (fixed_size && fixed_width && fixed_height) {
       this.fixed_overall_width = fixed_width + horizon_gap;
+      this.fixed_overall_height = fixed_height + vertical_gap;
     }
 
     // process exception
-    let card_list_len = card_list.length;
-    if (!card_list || !card_list_len) {
+    if (!card_list || !card_list.length) {
       return;
     }
 
@@ -78,31 +78,38 @@ class OrgChart {
     this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
 
+    this.initialize_tree_from_raw_data(card_list);
+
+    // build the level previous relationship
+    this.generate_level_prev_card_relationship();
+
+    // update the space for each node
+    this.update_node_horizon_space(this.root);
+  }
+
+  initialize_tree_from_raw_data(card_list: Array<any>) {
+    let card_list_len = card_list.length;
+
     // build card node map
     for (let i = 1; i < card_list_len; i++) {
       let { id, name } = card_list[i];
-      this.card_map.set(id, new CardNode(id, name));
+      this.card_map!.set(id, new CardNode(id, name));
     }
 
     // establish relationship between nodes
     for (let i = 0; i < card_list_len; i++) {
       let { id, children } = card_list[i];
-      let card = this.card_map.get(id)!;
+      let card = this.card_map!.get(id)!;
       let previous_card = undefined;
 
       for (let j = 0; j < children.length; j++) {
-        let child = this.card_map.get(children[j])!;
+        let child = this.card_map!.get(children[j])!;
         child.parent = card;
         child.previous = previous_card;
         previous_card = child;
         card.children.push(child!);
       }
     }
-
-    // build the level previous relationship
-    this.generate_level_prev_card_relationship();
-    // update the space for each node
-    this.update_node_horizon_space(this.root);
   }
 
   readjust_pos_of_subtree(node: CardNode) {
