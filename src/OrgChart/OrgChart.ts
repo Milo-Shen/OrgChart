@@ -1,5 +1,6 @@
 // Import Utils
-import { is_even, is_leaf, traverse_tree } from "./utils";
+import { is_even, is_leaf } from "./utils";
+import { DoubleLinkedList, DoubleLinkedListNode } from "./DoubleLinkedList";
 
 class CardNode {
   id: string;
@@ -35,6 +36,8 @@ class OrgChart {
   root?: CardNode;
   previous_card?: CardNode;
   card_map?: Map<string, CardNode>;
+  card_list: Array<CardNode>;
+  card_linked_list?: DoubleLinkedList;
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
@@ -53,6 +56,7 @@ class OrgChart {
     vertical_gap = 40
   ) {
     // initialization
+    this.card_list = [];
     this.fixed_size = fixed_size;
     this.fixed_width = fixed_width;
     this.fixed_height = fixed_height;
@@ -74,7 +78,9 @@ class OrgChart {
     this.root = new CardNode(root_data.id, root_data.name);
     this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
+    this.card_linked_list = new DoubleLinkedList();
 
+    // generate card node from raw data
     this.initialize_tree_from_raw_data(card_list);
 
     // build the level previous relationship
@@ -115,6 +121,7 @@ class OrgChart {
 
     while (queue.length) {
       level++;
+
       let len = queue.length;
       let pre_level_card = undefined;
 
@@ -124,6 +131,11 @@ class OrgChart {
         card!.level_previous = pre_level_card;
         pre_level_card = card;
 
+        // build card_list
+        this.card_list.push(card!);
+        this.card_linked_list!.push(card!);
+
+        // loop the next level of nodes
         let children = card!.children;
         for (let j = 0; j < children.length; j++) {
           queue.push(children[j]);
@@ -227,13 +239,7 @@ class OrgChart {
   }
 
   get_render_data() {
-    let render_list: Array<CardNode> = [];
-
-    traverse_tree(this.root!, (card) => {
-      render_list.push(card);
-    });
-
-    return render_list;
+    return this.card_list;
   }
 }
 
