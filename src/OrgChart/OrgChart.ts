@@ -112,27 +112,21 @@ class OrgChart {
     }
   }
 
-  readjust_pos_of_subtree(node: CardNode) {
-    if (node.level_previous) {
-      let min_pos = node.level_previous.ratio_pos_x + 1;
-      if (min_pos < node.ratio_pos_x) {
-        return;
-      }
+  generate_level_prev_card_relationship() {
+    let queue = [this.root];
 
-      // todo: for test only
-      console.log(
-        `node: ${node.id}, level_previous: ${node.level_previous?.ratio_pos_x}`
-      );
+    while (queue.length) {
+      let len = queue.length;
+      let pre_level_card = undefined;
 
-      let diff = min_pos - node.ratio_pos_x;
-      let queue = [node];
+      for (let i = 0; i < len; i++) {
+        let card = queue.shift();
+        card!.level_previous = pre_level_card;
+        pre_level_card = card;
 
-      while (queue.length) {
-        let node = queue.shift();
-        node!.ratio_pos_x = node!.ratio_pos_x + diff;
-        let children = node!.children;
-        for (let i = 0; i < children.length; i++) {
-          queue.push(children[i]);
+        let children = card!.children;
+        for (let j = 0; j < children.length; j++) {
+          queue.push(children[j]);
         }
       }
     }
@@ -147,6 +141,17 @@ class OrgChart {
     console.log(`node id: ${node.id}`);
 
     // most left node of each subtree
+    this.update_node_horizon_space_most_left_leaf(node);
+
+    // sibling node
+    this.update_node_horizon_space_sibling_nodes(node);
+
+    // go to the parent node
+    this.update_node_horizon_space_parent_node(node);
+  }
+
+  update_node_horizon_space_most_left_leaf(node: CardNode) {
+    // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
       node.ratio_pos_x = 1;
 
@@ -159,15 +164,18 @@ class OrgChart {
       this.previous_card = node;
       return;
     }
+  }
 
+  update_node_horizon_space_sibling_nodes(node: CardNode) {
     // sibling node
     if (node.previous === this.previous_card) {
       node.ratio_pos_x = node.previous!.ratio_pos_x + 1;
       this.previous_card = node;
       return;
     }
+  }
 
-    // go to the father node
+  update_node_horizon_space_parent_node(node: CardNode) {
     if (this.previous_card?.parent === node) {
       if (node.children.length === 1) {
         // todo: performance optimization -> readjust_pos_of_subtree ?
@@ -189,21 +197,22 @@ class OrgChart {
     }
   }
 
-  generate_level_prev_card_relationship() {
-    let queue = [this.root];
+  readjust_pos_of_subtree(node: CardNode) {
+    if (node.level_previous) {
+      let min_pos = node.level_previous.ratio_pos_x + 1;
+      if (min_pos < node.ratio_pos_x) {
+        return;
+      }
 
-    while (queue.length) {
-      let len = queue.length;
-      let pre_level_card = undefined;
+      let diff = min_pos - node.ratio_pos_x;
+      let queue = [node];
 
-      for (let i = 0; i < len; i++) {
-        let card = queue.shift();
-        card!.level_previous = pre_level_card;
-        pre_level_card = card;
-
-        let children = card!.children;
-        for (let j = 0; j < children.length; j++) {
-          queue.push(children[j]);
+      while (queue.length) {
+        let node = queue.shift();
+        node!.ratio_pos_x = node!.ratio_pos_x + diff;
+        let children = node!.children;
+        for (let i = 0; i < children.length; i++) {
+          queue.push(children[i]);
         }
       }
     }
