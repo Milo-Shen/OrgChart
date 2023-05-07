@@ -1,5 +1,6 @@
 // Import Classes, Interfaces
 import { CardNode } from "./OrgChart";
+import { ReactNode } from "react";
 
 export class DoubleLinkedListNode {
   val?: CardNode;
@@ -26,14 +27,19 @@ export class DoubleLinkedList {
     let linked_node = new DoubleLinkedListNode();
     linked_node.val = node;
     this.tail!.next = linked_node;
-    this.tail!.next = this.tail!.next.next;
+    this.tail = this.tail!.next;
   }
 
-  map(callback: (card: CardNode) => any) {
+  map(callback: (card: CardNode) => ReactNode): ReactNode {
+    let result: ReactNode[] = [];
+
     let p = this.root?.next;
+
     while (p && p.val) {
-      callback(p.val);
+      result.push(callback(p.val));
       p = p.next;
     }
+
+    return result;
   }
 }

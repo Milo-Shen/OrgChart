@@ -9,15 +9,17 @@ import { CardNode } from "../../OrgChart/OrgChart";
 
 // Import CSS
 import ChartStyle from "./Chart.module.css";
+import { DoubleLinkedList } from "../../OrgChart/DoubleLinkedList";
 
 // Interface
 interface ChartPropsInterface {
-  list: Array<CardNode>;
+  list: CardNode[] | DoubleLinkedList;
   children?: ReactNode | ReactNode[];
 }
 
 function Chart(props: ChartPropsInterface) {
   const { list } = props;
+
   return (
     <div className={ChartStyle.chart}>
       {list.map((card) => (

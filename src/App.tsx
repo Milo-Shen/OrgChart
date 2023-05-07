@@ -7,11 +7,12 @@ import Chart from "./Component/Chart/Chart";
 // Import Utils
 import { CardNode, OrgChart } from "./OrgChart/OrgChart";
 import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
+import { DoubleLinkedList } from "./OrgChart/DoubleLinkedList";
 
 function App() {
   let is_fetch = useRef(false);
 
-  let [card_list, set_card_list] = useState<Array<CardNode>>([]);
+  let [card_list, set_card_list] = useState<CardNode[] | DoubleLinkedList>([]);
 
   useEffect(() => {
     if (is_fetch.current) {

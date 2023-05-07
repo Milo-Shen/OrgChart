@@ -37,7 +37,7 @@ class OrgChart {
   previous_card?: CardNode;
   card_map?: Map<string, CardNode>;
   card_list: Array<CardNode>;
-  card_linked_list?: DoubleLinkedList;
+  card_linked_list: DoubleLinkedList;
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
@@ -62,6 +62,7 @@ class OrgChart {
     this.fixed_height = fixed_height;
     this.horizon_gap = horizon_gap;
     this.vertical_gap = vertical_gap;
+    this.card_linked_list = new DoubleLinkedList();
 
     if (fixed_size && fixed_width && fixed_height) {
       this.fixed_overall_width = fixed_width + horizon_gap;
@@ -78,13 +79,12 @@ class OrgChart {
     this.root = new CardNode(root_data.id, root_data.name);
     this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
-    this.card_linked_list = new DoubleLinkedList();
 
     // generate card node from raw data
     this.initialize_tree_from_raw_data(card_list);
 
     // build the level previous relationship
-    this.generate_level_prev_card_relationship();
+    this.link_level_prev_card_and_build_card_list();
 
     // update the space for each node
     this.update_node_horizon_space(this.root);
@@ -115,7 +115,7 @@ class OrgChart {
     }
   }
 
-  generate_level_prev_card_relationship() {
+  link_level_prev_card_and_build_card_list() {
     let level = -1;
     let queue = [this.root];
 
@@ -239,7 +239,8 @@ class OrgChart {
   }
 
   get_render_data() {
-    return this.card_list;
+    // return this.card_list;
+    return this.card_linked_list;
   }
 }
 
