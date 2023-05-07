@@ -27,6 +27,7 @@ export class DoubleLinkedList {
     let linked_node = new DoubleLinkedListNode();
     linked_node.val = node;
     this.tail!.next = linked_node;
+    linked_node.prev = this.tail;
     this.tail = this.tail!.next;
   }
 
