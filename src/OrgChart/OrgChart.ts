@@ -228,17 +228,10 @@ class OrgChart {
 
   get_render_data() {
     let render_list: Array<CardNode> = [];
-    let queue = [this.root];
 
-    while (queue.length) {
-      let card = queue.shift()!;
+    traverse_tree(this.root!, (card) => {
       render_list.push(card);
-
-      let children = card!.children;
-      for (let j = 0; j < children.length; j++) {
-        queue.push(children[j]);
-      }
-    }
+    });
 
     return render_list;
   }
