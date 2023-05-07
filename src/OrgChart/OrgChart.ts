@@ -102,7 +102,7 @@ class OrgChart {
     // build the level previous relationship
     this.generate_level_prev_card_relationship();
     // update the space for each node
-    this.update_node_space(this.root);
+    this.update_node_horizon_space(this.root);
   }
 
   readjust_pos_of_subtree(node: CardNode) {
@@ -131,9 +131,9 @@ class OrgChart {
     }
   }
 
-  update_node_space(node: CardNode) {
+  update_node_horizon_space(node: CardNode) {
     for (let i = 0; i < node.children.length; i++) {
-      this.update_node_space(node.children[i]);
+      this.update_node_horizon_space(node.children[i]);
     }
 
     // todo: for test only
@@ -142,6 +142,11 @@ class OrgChart {
     // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
       node.ratio_pos_x = 1;
+
+      if (this.fixed_overall_width) {
+        node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
+      }
+
       this.readjust_pos_of_subtree(node);
       this.previous_card = node;
       return;
