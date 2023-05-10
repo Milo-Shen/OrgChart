@@ -34,45 +34,45 @@ export default class DoublyLinkedList {
     this.compare = new Comparator(comparatorFunction);
   }
 
-  prepend(value: any) {
+  unshift(value: any) {
     // Make new node to be a head.
-    const newNode = new DoublyLinkedListNode(value, this.head);
+    const new_node = new DoublyLinkedListNode(value, this.head);
 
     // If there is head, then it won't be head anymore.
     // Therefore, make its previous reference to be new node (new head).
     // Then mark the new node as head.
     if (this.head) {
-      this.head.previous = newNode;
+      this.head.previous = new_node;
     }
 
-    this.head = newNode;
+    this.head = new_node;
 
     // If there is no tail yet let's make new node a tail.
     if (!this.tail) {
-      this.tail = newNode;
+      this.tail = new_node;
     }
 
     return this;
   }
 
-  append(value: any) {
-    const newNode = new DoublyLinkedListNode(value);
+  push(value: any) {
+    const new_node = new DoublyLinkedListNode(value);
 
     // If there is no head yet let's make new node a head.
     if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
+      this.head = new_node;
+      this.tail = new_node;
       return this;
     }
 
     // Attach new node to the end of linked list.
-    this.tail!.next = newNode;
+    this.tail!.next = new_node;
 
     // Attach current tail to the new node's previous reference.
-    newNode.previous = this.tail;
+    new_node.previous = this.tail;
 
     // Set new node to be the tail of linked list.
-    this.tail = newNode;
+    this.tail = new_node;
 
     return this;
   }
@@ -82,18 +82,18 @@ export default class DoublyLinkedList {
       return undefined;
     }
 
-    let deletedNode = undefined;
-    let currentNode: NodeType = this.head;
+    let deleted_node = undefined;
+    let current_node: NodeType = this.head;
 
-    while (currentNode) {
-      if (this.compare.equal(currentNode.value, value)) {
-        deletedNode = currentNode;
+    while (current_node) {
+      if (this.compare.equal(current_node.value, value)) {
+        deleted_node = current_node;
 
-        if (deletedNode === this.head) {
+        if (deleted_node === this.head) {
           // If HEAD is going to be deleted...
 
           // Set head to second node, which will become new head.
-          this.head = deletedNode.next;
+          this.head = deleted_node.next;
 
           // Set new head's previous to undefined.
           if (this.head) {
@@ -102,28 +102,28 @@ export default class DoublyLinkedList {
 
           // If all the nodes in list has same value that is passed as argument
           // then all nodes will get deleted, therefore tail needs to be updated.
-          if (deletedNode === this.tail) {
+          if (deleted_node === this.tail) {
             this.tail = undefined;
           }
-        } else if (deletedNode === this.tail) {
+        } else if (deleted_node === this.tail) {
           // If TAIL is going to be deleted...
           // Set tail to second last node, which will become new tail.
-          this.tail = deletedNode.previous;
+          this.tail = deleted_node.previous;
           this.tail!.next = undefined;
         } else {
           // If MIDDLE node is going to be deleted...
-          const previousNode = deletedNode.previous;
-          const nextNode = deletedNode.next;
+          const previous_node = deleted_node.previous;
+          const next_node = deleted_node.next;
 
-          previousNode!.next = nextNode;
-          nextNode!.previous = previousNode;
+          previous_node!.next = next_node;
+          next_node!.previous = previous_node;
         }
       }
 
-      currentNode = currentNode.next;
+      current_node = current_node.next;
     }
 
-    return deletedNode;
+    return deleted_node;
   }
 
   find(value = undefined, callback: Function) {
@@ -131,26 +131,29 @@ export default class DoublyLinkedList {
       return undefined;
     }
 
-    let currentNode: NodeType = this.head;
+    let current_node: NodeType = this.head;
 
-    while (currentNode) {
+    while (current_node) {
       // If callback is specified then try to find node by callback.
-      if (callback && callback(currentNode.value)) {
-        return currentNode;
+      if (callback && callback(current_node.value)) {
+        return current_node;
       }
 
       // If value is specified then try to compare by value...
-      if (value !== undefined && this.compare.equal(currentNode.value, value)) {
-        return currentNode;
+      if (
+        value !== undefined &&
+        this.compare.equal(current_node.value, value)
+      ) {
+        return current_node;
       }
 
-      currentNode = currentNode.next;
+      current_node = current_node.next;
     }
 
     return undefined;
   }
 
-  deleteTail() {
+  pop() {
     if (!this.tail) {
       // No tail to delete.
       return undefined;
@@ -158,28 +161,28 @@ export default class DoublyLinkedList {
 
     if (this.head === this.tail) {
       // There is only one node in linked list.
-      const deletedTail = this.tail;
+      const deleted_tail = this.tail;
       this.head = undefined;
       this.tail = undefined;
 
-      return deletedTail;
+      return deleted_tail;
     }
 
     // If there are many nodes in linked list...
-    const deletedTail = this.tail;
+    const deleted_tail = this.tail;
 
     this.tail = this.tail.previous;
     this.tail!.next = undefined;
 
-    return deletedTail;
+    return deleted_tail;
   }
 
-  deleteHead() {
+  shift() {
     if (!this.head) {
       return undefined;
     }
 
-    const deletedHead = this.head;
+    const deleted_head = this.head;
 
     if (this.head.next) {
       this.head = this.head.next;
@@ -189,24 +192,24 @@ export default class DoublyLinkedList {
       this.tail = undefined;
     }
 
-    return deletedHead;
+    return deleted_head;
   }
 
   toArray() {
     const nodes = [];
 
-    let currentNode = this.head;
+    let current_node = this.head;
 
-    while (currentNode) {
-      nodes.push(currentNode);
-      currentNode = currentNode.next;
+    while (current_node) {
+      nodes.push(current_node);
+      current_node = current_node.next;
     }
 
     return nodes;
   }
 
   fromArray(values: any) {
-    values.forEach((value: any) => this.append(value));
+    values.forEach((value: any) => this.push(value));
     return this;
   }
 
@@ -217,27 +220,27 @@ export default class DoublyLinkedList {
   }
 
   reverse() {
-    let currNode = this.head;
-    let prevNode = undefined;
-    let nextNode = undefined;
+    let curr_node = this.head;
+    let prev_node = undefined;
+    let next_node = undefined;
 
-    while (currNode) {
+    while (curr_node) {
       // Store next node.
-      nextNode = currNode.next;
-      prevNode = currNode.previous;
+      next_node = curr_node.next;
+      prev_node = curr_node.previous;
 
-      // Change next node of the current node so it would link to previous node.
-      currNode.next = prevNode;
-      currNode.previous = nextNode;
+      // Change next node of the current node, so it would link to previous node.
+      curr_node.next = prev_node;
+      curr_node.previous = next_node;
 
-      // Move prevNode and currNode nodes one step forward.
-      prevNode = currNode;
-      currNode = nextNode;
+      // Move prev_node and curr_node nodes one step forward.
+      prev_node = curr_node;
+      curr_node = next_node;
     }
 
     // Reset head and tail.
     this.tail = this.head;
-    this.head = prevNode;
+    this.head = prev_node;
 
     return this;
   }
