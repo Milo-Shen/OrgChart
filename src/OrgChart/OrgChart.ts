@@ -3,6 +3,9 @@ import { is_even, is_leaf } from "./utils";
 import { DoubleLinkedList } from "./DoubleLinkedList";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
+let test = new DoublyLinkedList();
+console.log(test.is_empty());
+
 class CardNode {
   id: string;
   name: string;

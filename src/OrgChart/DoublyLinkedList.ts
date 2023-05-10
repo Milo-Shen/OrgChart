@@ -27,10 +27,12 @@ export class DoublyLinkedList {
   head?: DoublyLinkedListNode;
   tail?: DoublyLinkedListNode;
   compare: Comparator;
+  length: number;
 
   constructor(comparatorFunction?: Function) {
     this.head = undefined;
     this.tail = undefined;
+    this.length = 0;
     this.compare = new Comparator(comparatorFunction);
   }
 
@@ -41,10 +43,17 @@ export class DoublyLinkedList {
   }
 
   is_empty() {
-    return !(this.head || this.tail || this.head !== this.tail);
+    return !this.tail;
+  }
+
+  get_length() {
+    return this.length;
   }
 
   unshift(value: any) {
+    // update the length of linked list
+    this.length++;
+
     // Make new node to be a head.
     const new_node = new DoublyLinkedListNode(value, this.head);
 
@@ -66,6 +75,9 @@ export class DoublyLinkedList {
   }
 
   push(value: any) {
+    // update the length of linked list
+    this.length++;
+
     const new_node = new DoublyLinkedListNode(value);
 
     // If there is no head yet let's make new node a head.
@@ -128,6 +140,9 @@ export class DoublyLinkedList {
           previous_node!.next = next_node;
           next_node!.previous = previous_node;
         }
+
+        // update the length of linked list
+        this.length--;
       }
 
       current_node = current_node.next;
@@ -175,6 +190,8 @@ export class DoublyLinkedList {
       this.head = undefined;
       this.tail = undefined;
 
+      // update the length of linked list
+      this.length--;
       return deleted_tail;
     }
 
@@ -184,6 +201,8 @@ export class DoublyLinkedList {
     this.tail = this.tail.previous;
     this.tail!.next = undefined;
 
+    // update the length of linked list
+    this.length--;
     return deleted_tail;
   }
 
@@ -201,6 +220,9 @@ export class DoublyLinkedList {
       this.head = undefined;
       this.tail = undefined;
     }
+
+    // update the length of linked list
+    this.length--;
 
     return deleted_head;
   }
