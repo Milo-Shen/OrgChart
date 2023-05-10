@@ -1,6 +1,7 @@
 // Import Utils
 import { is_even, is_leaf } from "./utils";
 import { DoubleLinkedList } from "./DoubleLinkedList";
+import { DoublyLinkedList } from "./DoublyLinkedList";
 
 class CardNode {
   id: string;

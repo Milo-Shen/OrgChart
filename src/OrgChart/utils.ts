@@ -29,7 +29,7 @@ export function traverse_tree(
 export default class Comparator {
   compare: Function;
 
-  constructor(compareFunction: Function) {
+  constructor(compareFunction?: Function) {
     this.compare = compareFunction || Comparator.defaultCompareFunction;
   }
 

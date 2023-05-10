@@ -1,7 +1,7 @@
 // Import Utils
 import Comparator from "./utils";
 
-type NodeType = DoublyLinkedListNode | undefined;
+export type NodeType = DoublyLinkedListNode | undefined;
 
 export class DoublyLinkedListNode {
   value: any;
@@ -23,15 +23,25 @@ export class DoublyLinkedListNode {
   }
 }
 
-export default class DoublyLinkedList {
+export class DoublyLinkedList {
   head?: DoublyLinkedListNode;
   tail?: DoublyLinkedListNode;
   compare: Comparator;
 
-  constructor(comparatorFunction: Function) {
+  constructor(comparatorFunction?: Function) {
     this.head = undefined;
     this.tail = undefined;
     this.compare = new Comparator(comparatorFunction);
+  }
+
+  static from_array(values: any) {
+    let linked_list = new DoublyLinkedList();
+    values.forEach((value: any) => linked_list.push(value));
+    return linked_list;
+  }
+
+  is_empty() {
+    return !(this.head || this.tail || this.head !== this.tail);
   }
 
   unshift(value: any) {
@@ -195,7 +205,7 @@ export default class DoublyLinkedList {
     return deleted_head;
   }
 
-  toArray() {
+  to_array() {
     const nodes = [];
 
     let current_node = this.head;
@@ -208,13 +218,8 @@ export default class DoublyLinkedList {
     return nodes;
   }
 
-  fromArray(values: any) {
-    values.forEach((value: any) => this.push(value));
-    return this;
-  }
-
-  toString(callback: Function) {
-    return this.toArray()
+  to_string(callback: Function) {
+    return this.to_array()
       .map((node) => node.toString(callback))
       .toString();
   }
