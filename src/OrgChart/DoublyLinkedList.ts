@@ -18,7 +18,7 @@ export class DoublyLinkedListNode {
     this.previous = previous;
   }
 
-  toString(callback: Function) {
+  to_string(callback: Function) {
     return callback ? callback(this.value) : `${this.value}`;
   }
 }
@@ -148,7 +148,7 @@ export class DoublyLinkedList {
       current_node = current_node.next;
     }
 
-    return deleted_node;
+    return deleted_node?.value;
   }
 
   find(value = undefined, callback: Function) {
@@ -161,7 +161,7 @@ export class DoublyLinkedList {
     while (current_node) {
       // If callback is specified then try to find node by callback.
       if (callback && callback(current_node.value)) {
-        return current_node;
+        return current_node?.value;
       }
 
       // If value is specified then try to compare by value...
@@ -169,7 +169,7 @@ export class DoublyLinkedList {
         value !== undefined &&
         this.compare.equal(current_node.value, value)
       ) {
-        return current_node;
+        return current_node?.value;
       }
 
       current_node = current_node.next;
@@ -192,7 +192,7 @@ export class DoublyLinkedList {
 
       // update the length of linked list
       this.length--;
-      return deleted_tail;
+      return deleted_tail?.value;
     }
 
     // If there are many nodes in linked list...
@@ -203,7 +203,7 @@ export class DoublyLinkedList {
 
     // update the length of linked list
     this.length--;
-    return deleted_tail;
+    return deleted_tail?.value;
   }
 
   shift() {
@@ -224,7 +224,7 @@ export class DoublyLinkedList {
     // update the length of linked list
     this.length--;
 
-    return deleted_head;
+    return deleted_head?.value;
   }
 
   to_array() {
@@ -242,7 +242,7 @@ export class DoublyLinkedList {
 
   to_string(callback: Function) {
     return this.to_array()
-      .map((node) => node.toString(callback))
+      .map((node) => node.to_string(callback))
       .toString();
   }
 

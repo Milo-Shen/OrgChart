@@ -3,9 +3,6 @@ import { is_even, is_leaf } from "./utils";
 import { DoubleLinkedList } from "./DoubleLinkedList";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
-let test = new DoublyLinkedList();
-console.log(test.is_empty());
-
 class CardNode {
   id: string;
   name: string;
@@ -121,12 +118,12 @@ class OrgChart {
 
   link_level_prev_card_and_build_card_list() {
     let level = -1;
-    let queue = [this.root];
+    let queue = DoublyLinkedList.from_array([this.root]);
 
-    while (queue.length) {
+    while (!queue.is_empty()) {
       level++;
 
-      let len = queue.length;
+      let len = queue.get_length();
       let pre_level_card = undefined;
 
       for (let i = 0; i < len; i++) {
@@ -154,7 +151,7 @@ class OrgChart {
     }
 
     // todo: for test only
-    console.log(`node id: ${node.id}`);
+    // console.log(`node id: ${node.id}`);
 
     // most left node of each subtree
     this.update_node_horizon_space_most_left_leaf(node);
@@ -229,9 +226,9 @@ class OrgChart {
       }
 
       let diff = min_pos - node.ratio_pos_x;
-      let queue = [node];
+      let queue = DoublyLinkedList.from_array([node]);
 
-      while (queue.length) {
+      while (!queue.is_empty()) {
         let node = queue.shift();
         node!.ratio_pos_x = node!.ratio_pos_x + diff;
         let children = node!.children;
