@@ -1,5 +1,7 @@
 // Import Utils
 import Comparator from "./utils";
+import { CardNode } from "./OrgChart";
+import { ReactNode } from "react";
 
 export type NodeType = DoublyLinkedListNode | undefined;
 
@@ -270,5 +272,18 @@ export class DoublyLinkedList {
     this.head = prev_node;
 
     return this;
+  }
+
+  map(callback: (card: CardNode) => ReactNode): ReactNode {
+    let result: ReactNode[] = [];
+
+    let p = this.head;
+
+    while (p && p.value) {
+      result.push(callback(p.value));
+      p = p.next;
+    }
+
+    return result;
   }
 }
