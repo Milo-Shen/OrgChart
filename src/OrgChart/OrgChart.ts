@@ -2,6 +2,13 @@
 import { is_even, is_leaf } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
+// Interface
+export enum LineType {
+  Left = "Left",
+  Right = "Right",
+  Middle = "Middle",
+}
+
 class CardNode {
   id: string;
   name: string;
@@ -63,6 +70,7 @@ class OrgChart {
     this.horizon_gap = horizon_gap;
     this.vertical_gap = vertical_gap;
     this.card_linked_list = new DoublyLinkedList();
+    this.previous_card = undefined;
 
     if (fixed_size && fixed_width && fixed_height) {
       this.fixed_overall_width = fixed_width + horizon_gap;
@@ -86,8 +94,13 @@ class OrgChart {
     // build the level previous relationship
     this.link_level_prev_card_and_build_card_list();
 
-    // update the space for each node
+    // update the horizon space for each node
+    this.previous_card = undefined;
     this.update_node_horizon_space(this.root);
+
+    // todo: update the vertical space for each node
+
+    // calculate the line pos
   }
 
   initialize_tree_from_raw_data(card_list: Array<any>) {
