@@ -8,12 +8,12 @@ import SimpleOrgChart from "./Component/SimpleOrgChart";
 // Import Utils
 import { CardNode, OrgChart } from "./OrgChart/OrgChart";
 import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
-import { DoubleLinkedList } from "./OrgChart/DoubleLinkedList";
+import { DoublyLinkedList } from "./OrgChart/DoublyLinkedList";
 
 function App() {
   let is_fetch = useRef(false);
 
-  let [card_list, set_card_list] = useState<CardNode[] | DoubleLinkedList>([]);
+  let [card_list, set_card_list] = useState<CardNode[] | DoublyLinkedList>([]);
 
   useEffect(() => {
     if (is_fetch.current) {
@@ -22,11 +22,12 @@ function App() {
 
     // todo: test it
     let now = performance.now();
-    let data = mock_org_chart_data(
-      ~~(Math.random() * 20) + 1,
-      ~~(Math.random() * 5) + 1,
-      true
-    );
+    // let data = mock_org_chart_data(
+    //   ~~(Math.random() * 20) + 1,
+    //   ~~(Math.random() * 5) + 1,
+    //   true
+    // );
+    let data = mock_org_chart_data(10, 2, false);
     // data[7].children.push("id=11");
     // data.push({ children: ["id=12"], id: "id=11", name: "id=11" });
     // data.push({ children: [], id: "id=12", name: "id=12" });

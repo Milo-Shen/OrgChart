@@ -1,19 +1,16 @@
 // Import React Framework
 import React, { ReactNode } from "react";
 
-// Import Customized Component
-import SimpleOrgChart from "../SimpleOrgChart";
-
 // Import Interface
 import { CardNode } from "../../OrgChart/OrgChart";
 
 // Import CSS
 import ChartStyle from "./Chart.module.css";
-import { DoubleLinkedList } from "../../OrgChart/DoubleLinkedList";
+import { DoublyLinkedList } from "../../OrgChart/DoublyLinkedList";
 
 // Interface
 interface ChartPropsInterface {
-  list: CardNode[] | DoubleLinkedList;
+  list: CardNode[] | DoublyLinkedList;
   card_template: (card: CardNode) => ReactNode;
   children?: ReactNode | ReactNode[];
 }

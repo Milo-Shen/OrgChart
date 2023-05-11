@@ -1,6 +1,5 @@
 // Import Utils
 import { is_even, is_leaf } from "./utils";
-import { DoubleLinkedList } from "./DoubleLinkedList";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
 class CardNode {
@@ -38,7 +37,7 @@ class OrgChart {
   previous_card?: CardNode;
   card_map?: Map<string, CardNode>;
   card_list: Array<CardNode>;
-  card_linked_list: DoubleLinkedList;
+  card_linked_list: DoublyLinkedList;
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
@@ -63,7 +62,7 @@ class OrgChart {
     this.fixed_height = fixed_height;
     this.horizon_gap = horizon_gap;
     this.vertical_gap = vertical_gap;
-    this.card_linked_list = new DoubleLinkedList();
+    this.card_linked_list = new DoublyLinkedList();
 
     if (fixed_size && fixed_width && fixed_height) {
       this.fixed_overall_width = fixed_width + horizon_gap;
