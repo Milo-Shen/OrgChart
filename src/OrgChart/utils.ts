@@ -1,6 +1,9 @@
 // Import Types, Classes and Interfaces
 import { CardNode } from "./OrgChart";
 
+// Import LinkedList
+import { DoublyLinkedList } from "./DoublyLinkedList";
+
 export function is_even(num: number): boolean {
   return num % 2 === 0;
 }
@@ -9,7 +12,7 @@ export function is_leaf(node: CardNode) {
   return !node.children.length;
 }
 
-export function traverse_tree(
+export function traverse_tree_by_level(
   node: CardNode,
   callback: (node: CardNode) => void
 ) {
@@ -22,6 +25,22 @@ export function traverse_tree(
     let children = card!.children;
     for (let j = 0; j < children.length; j++) {
       queue.push(children[j]);
+    }
+  }
+}
+
+export function traverse_tree_by_dfs(
+  node: CardNode,
+  callback: (node: CardNode) => void
+) {
+  let stack = DoublyLinkedList.from_array([node]);
+  while (!stack.is_empty()) {
+    let card = stack.pop();
+    callback(card);
+
+    let children = card.children;
+    for (let i = children.length - 1; i >= 0; i--) {
+      stack.push(children[i]);
     }
   }
 }

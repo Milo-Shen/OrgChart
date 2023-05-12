@@ -101,6 +101,7 @@ class OrgChart {
     // todo: update the vertical space for each node
 
     // calculate the line pos
+    this.previous_card = undefined;
   }
 
   initialize_tree_from_raw_data(card_list: Array<any>) {
@@ -163,7 +164,7 @@ class OrgChart {
     }
 
     // todo: for test only
-    // console.log(`node id: ${node.id}`);
+    console.log(`node id: ${node.id}`);
 
     // most left node of each subtree
     this.update_node_horizon_space_most_left_leaf(node);
