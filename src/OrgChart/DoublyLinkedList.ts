@@ -44,6 +44,14 @@ export class DoublyLinkedList {
     return linked_list;
   }
 
+  first() {
+    return this.head?.value;
+  }
+
+  last() {
+    return this.tail?.value;
+  }
+
   is_empty() {
     return !this.tail;
   }

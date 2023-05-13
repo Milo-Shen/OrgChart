@@ -30,18 +30,31 @@ export function traverse_tree_by_level(
 }
 
 export function traverse_tree_by_dfs(
-  node: CardNode,
+  root: CardNode,
   callback: (node: CardNode) => void
 ) {
-  let stack = DoublyLinkedList.from_array([node]);
-  while (!stack.is_empty()) {
-    let card = stack.pop();
-    callback(card);
+  if (!root) {
+    return;
+  }
 
-    let children = card.children;
-    for (let i = children.length - 1; i >= 0; i--) {
-      stack.push(children[i]);
+  let pre = root;
+  let stack = DoublyLinkedList.from_array([root]);
+
+  while (!stack.is_empty()) {
+    let node = stack.last();
+    if (
+      !node.children.length ||
+      pre === node.children[node.children.length - 1]
+    ) {
+      stack.pop();
+      callback(node);
+    } else {
+      for (let i = node.children.length - 1; i >= 0; i--) {
+        stack.push(node.children[i]);
+      }
     }
+
+    pre = node;
   }
 }
 
