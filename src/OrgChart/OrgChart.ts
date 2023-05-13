@@ -102,9 +102,6 @@ class OrgChart {
 
     // calculate the line pos
     this.previous_card = undefined;
-    traverse_tree_by_dfs(this.root, (node) => {
-      console.log(`id: ${node.id}`);
-    });
   }
 
   initialize_tree_from_raw_data(card_list: Array<any>) {
@@ -161,29 +158,23 @@ class OrgChart {
     }
   }
 
-  update_node_horizon_space(node: CardNode) {
-    if (!node) {
-      return;
-    }
+  update_node_horizon_space(root: CardNode) {
+    traverse_tree_by_dfs(root, (node) => {
+      // todo: for test only
+      console.log(`node id: ${node.id}`);
 
-    for (let i = 0; i < node.children.length; i++) {
-      this.update_node_horizon_space(node.children[i]);
-    }
+      // most left node of each subtree
+      this.update_node_horizon_space_most_left_leaf(node);
 
-    // todo: for test only
-    console.log(`node id: ${node.id}`);
+      // sibling node
+      this.update_node_horizon_space_sibling_nodes(node);
 
-    // most left node of each subtree
-    this.update_node_horizon_space_most_left_leaf(node);
+      // go to the parent node
+      this.update_node_horizon_space_parent_node(node);
 
-    // sibling node
-    this.update_node_horizon_space_sibling_nodes(node);
-
-    // go to the parent node
-    this.update_node_horizon_space_parent_node(node);
-
-    // convert coordinate ratio to detailed coordinate value
-    this.convert_ratio_coordinate_to_detail_val(node);
+      // convert coordinate ratio to detailed coordinate value
+      this.convert_ratio_coordinate_to_detail_val(node);
+    });
   }
 
   update_node_horizon_space_most_left_leaf(node: CardNode) {
