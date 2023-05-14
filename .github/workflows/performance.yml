@@ -28,5 +28,5 @@ jobs:
       with:
         ACCESS_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: display
+        FOLDER: build
         PRESERVE: true
