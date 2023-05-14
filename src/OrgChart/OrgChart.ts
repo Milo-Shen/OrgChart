@@ -14,6 +14,20 @@ export enum LineType {
   Middle = "Middle",
 }
 
+class LineNode {
+  pos_x: number;
+  pos_y: number;
+  width: number;
+  height: number;
+
+  constructor(id: string, name: string) {
+    this.pos_x = -Infinity;
+    this.pos_y = -Infinity;
+    this.width = 0;
+    this.height = 0;
+  }
+}
+
 class CardNode {
   id: string;
   name: string;
@@ -164,7 +178,13 @@ class OrgChart {
 
   calculate_line_pos(root: CardNode) {
     traverse_tree_by_level(root, (node) => {
-      console.log(node.id);
+      if (is_leaf(node)) {
+        return;
+      }
+
+      let children_len = node.children.length;
+      if (children_len === 1) {
+      }
     });
   }
 
@@ -192,7 +212,6 @@ class OrgChart {
       node.ratio_pos_x = 0;
       this.readjust_horizon_pos_of_subtree(node);
       this.previous_card = node;
-      return;
     }
   }
 
@@ -201,7 +220,6 @@ class OrgChart {
     if (node.previous === this.previous_card) {
       node.ratio_pos_x = node.previous!.ratio_pos_x + 1;
       this.previous_card = node;
-      return;
     }
   }
 
@@ -223,7 +241,6 @@ class OrgChart {
 
       this.readjust_horizon_pos_of_subtree(node);
       this.previous_card = node;
-      return;
     }
   }
 
