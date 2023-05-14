@@ -34,6 +34,7 @@ function Chart(props: ChartPropsInterface) {
           type={line.type}
           color={line.color}
           border_width={line.border_width}
+          border_radius={line.border_radius}
         />
       ))}
     </div>

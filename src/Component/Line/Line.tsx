@@ -19,10 +19,20 @@ export interface LinePropsInterface {
   type: LineType;
   color: string;
   border_width: number;
+  border_radius: number;
 }
 
 function Line(props: LinePropsInterface) {
-  const { width, height, pos_x, pos_y, type, color, border_width } = props;
+  const {
+    width,
+    height,
+    pos_x,
+    pos_y,
+    type,
+    color,
+    border_width,
+    border_radius,
+  } = props;
 
   let style: any = {
     width: `${width}px`,
@@ -36,6 +46,8 @@ function Line(props: LinePropsInterface) {
   } else {
     style.borderColor = color;
     style.borderWidth = border_width;
+    style.borderTopLeftRadius = border_radius;
+    style.borderTopRightRadius = border_radius;
   }
 
   return (

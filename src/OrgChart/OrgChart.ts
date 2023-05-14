@@ -58,6 +58,7 @@ class OrgChart {
   line_list: Array<LineNode>;
   line_width: number;
   line_color: string;
+  line_radius: number;
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
@@ -75,13 +76,15 @@ class OrgChart {
     horizon_gap = 10,
     vertical_gap = 40,
     line_width = 1,
-    line_color: string = "#6A6D70"
+    line_color: string = "#6A6D70",
+    line_radius = 0
   ) {
     // initialization
     this.card_list = [];
     this.line_list = [];
     this.line_width = line_width;
     this.line_color = line_color;
+    this.line_radius = line_radius;
     this.fixed_size = fixed_size;
     this.fixed_width = fixed_width;
     this.fixed_height = fixed_height;
@@ -287,11 +290,12 @@ class OrgChart {
       let line_node = new LineNode();
       line_node.color = this.line_color;
       line_node.border_width = this.line_width;
+      line_node.border_radius = this.line_radius;
 
       let children_len = node.children.length;
       if (children_len === 1) {
         // type: Line
-        line_node.pos_x = ~~(node.pos_x + node.width / 2 - this.line_width / 2);
+        line_node.pos_x = node.pos_x + (node.width - this.line_width) / 2;
         line_node.pos_y = node.pos_y + node.height;
         line_node.width = this.line_width;
         line_node.height = this.vertical_gap;
@@ -305,14 +309,28 @@ class OrgChart {
         let last = node.children[node.children.length - 1];
 
         // get the mid pos of a card
-        let start = first.pos_x + first.width / 2 - this.line_width / 2;
-        let end = last.pos_x + last.width / 2 - this.line_width / 2;
+        let start = first.pos_x + (first.width - this.line_width) / 2;
+        let end = last.pos_x + (last.width - this.line_width) / 2;
 
         // update line info
         line_node.pos_x = start;
         line_node.height = (this.vertical_gap + this.line_width) / 2;
         line_node.pos_y = first.pos_y - line_node.height;
         line_node.width = end - start;
+
+        // add line type line
+        let parent_to_sub_line_node = new LineNode();
+        parent_to_sub_line_node.color = this.line_color;
+        parent_to_sub_line_node.border_width = this.line_width;
+        parent_to_sub_line_node.border_radius = this.line_radius;
+        parent_to_sub_line_node.pos_x =
+          node.pos_x + (node.width - this.line_width) / 2;
+        parent_to_sub_line_node.pos_y = node.pos_y + node.height;
+        parent_to_sub_line_node.width = this.line_width;
+        parent_to_sub_line_node.height =
+          (this.vertical_gap - this.line_width) / 2;
+        parent_to_sub_line_node.type = LineType.Line;
+        this.line_list.push(parent_to_sub_line_node);
       }
 
       this.line_list.push(line_node);
