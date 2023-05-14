@@ -20,11 +20,16 @@ class LineNode {
   width: number;
   height: number;
 
-  constructor(id: string, name: string) {
-    this.pos_x = -Infinity;
-    this.pos_y = -Infinity;
-    this.width = 0;
-    this.height = 0;
+  constructor(
+    x: number = -Infinity,
+    y: number = Infinity,
+    w: number = 0,
+    h: number = 0
+  ) {
+    this.pos_x = x;
+    this.pos_y = y;
+    this.width = w;
+    this.height = h;
   }
 }
 
@@ -35,22 +40,22 @@ class CardNode {
   parent?: CardNode;
   previous?: CardNode;
   level_previous?: CardNode;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
   ratio_pos_x: number;
   ratio_pos_y: number;
   pos_x: number;
   pos_y: number;
 
-  constructor(id: string, name: string) {
+  constructor(id: string, name: string, w: number = 0, h: number = 0) {
     this.id = id;
     this.name = name;
     this.children = [];
     this.parent = undefined;
     this.previous = undefined;
     this.level_previous = undefined;
-    this.width = 0;
-    this.height = 0;
+    this.width = w;
+    this.height = h;
     this.ratio_pos_x = -Infinity;
     this.ratio_pos_y = 0;
     this.pos_x = -Infinity;
@@ -64,6 +69,8 @@ class OrgChart {
   card_map?: Map<string, CardNode>;
   card_list: Array<CardNode>;
   card_linked_list: DoublyLinkedList;
+  line_list: Array<LineNode>;
+  line_width: number;
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
@@ -79,10 +86,13 @@ class OrgChart {
     fixed_width?: number,
     fixed_height?: number,
     horizon_gap = 10,
-    vertical_gap = 40
+    vertical_gap = 40,
+    line_width = 1
   ) {
     // initialization
     this.card_list = [];
+    this.line_list = [];
+    this.line_width = line_width;
     this.fixed_size = fixed_size;
     this.fixed_width = fixed_width;
     this.fixed_height = fixed_height;
@@ -91,19 +101,21 @@ class OrgChart {
     this.card_linked_list = new DoublyLinkedList();
     this.previous_card = undefined;
 
-    if (fixed_size && fixed_width && fixed_height) {
-      this.fixed_overall_width = fixed_width + horizon_gap;
-      this.fixed_overall_height = fixed_height + vertical_gap;
-    }
-
     // process exception
     if (!card_list || !card_list.length) {
       return;
     }
 
+    // process the fixed size type
+    if (fixed_size && fixed_width && fixed_height) {
+      this.fixed_overall_width = fixed_width + horizon_gap;
+      this.fixed_overall_height = fixed_height + vertical_gap;
+    }
+
     // create the root node
     let root_data = card_list[0];
     this.root = new CardNode(root_data.id, root_data.name);
+    this.initialize_fixed_width_height_of_a_node(this.root);
     this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
 
@@ -122,13 +134,25 @@ class OrgChart {
     this.calculate_line_pos(this.root);
   }
 
+  initialize_fixed_width_height_of_a_node(node: CardNode) {
+    // process the fixed size type
+    if (this.fixed_size && this.fixed_width && this.fixed_height) {
+      node.width = this.fixed_width;
+      node.height = this.fixed_height;
+    }
+  }
+
   initialize_tree_from_raw_data(card_list: Array<any>) {
     let card_list_len = card_list.length;
 
     // build card node map
     for (let i = 1; i < card_list_len; i++) {
       let { id, name } = card_list[i];
-      this.card_map!.set(id, new CardNode(id, name));
+      let new_card = new CardNode(id, name);
+
+      // process the fixed size type
+      this.initialize_fixed_width_height_of_a_node(new_card);
+      this.card_map!.set(id, new_card);
     }
 
     // establish relationship between nodes
@@ -182,8 +206,13 @@ class OrgChart {
         return;
       }
 
+      let line_node = new LineNode();
       let children_len = node.children.length;
       if (children_len === 1) {
+        line_node.width = this.line_width;
+        line_node.height = this.vertical_gap;
+        line_node.pos_x = ~~(node.pos_x / 2 - this.line_width / 2);
+        line_node.pos_y = node.pos_y + node.height;
       }
     });
   }

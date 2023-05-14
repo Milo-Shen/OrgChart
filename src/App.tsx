@@ -54,6 +54,8 @@ function App() {
             parent_id={card.parent?.id}
             ratio_pos_x={card.ratio_pos_x}
             ratio_pos_y={card.ratio_pos_y}
+            width={card.width}
+            height={card.height}
             pos_x={card.pos_x}
             pos_y={card.pos_y}
           />
