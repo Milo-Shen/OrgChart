@@ -1,3 +1,6 @@
+// Import Classes, Interfaces, Type
+import { LineNode, LineType } from "./Line";
+
 // Import Utils
 import {
   is_even,
@@ -7,38 +10,14 @@ import {
 } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
-// Interface
-export enum LineType {
-  Left = "Left",
-  Right = "Right",
-  Middle = "Middle",
-}
-
+// Export Classes, Interfaces, Type
 export type ChartRenderData = {
   card_list: CardNode[] | DoublyLinkedList;
   line_list: LineNode[];
 };
 
+// Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
-
-class LineNode {
-  pos_x: number;
-  pos_y: number;
-  width: number;
-  height: number;
-
-  constructor(
-    x: number = -Infinity,
-    y: number = Infinity,
-    w: number = 0,
-    h: number = 0
-  ) {
-    this.pos_x = x;
-    this.pos_y = y;
-    this.width = w;
-    this.height = h;
-  }
-}
 
 class CardNode {
   id: string;
@@ -210,25 +189,6 @@ class OrgChart {
     }
   }
 
-  calculate_line_pos(root: CardNode) {
-    traverse_tree_by_level(root, (node) => {
-      if (is_leaf(node)) {
-        return;
-      }
-
-      let line_node = new LineNode();
-      let children_len = node.children.length;
-      if (children_len === 1) {
-        line_node.width = this.line_width;
-        line_node.height = this.vertical_gap;
-        line_node.pos_x = ~~(node.pos_x + node.width / 2 - this.line_width / 2);
-        line_node.pos_y = node.pos_y + node.height;
-      }
-
-      this.line_list.push(line_node);
-    });
-  }
-
   update_node_horizon_space(root: CardNode) {
     this.previous_card = undefined;
 
@@ -315,6 +275,48 @@ class OrgChart {
         }
       }
     }
+  }
+
+  calculate_line_pos(root: CardNode) {
+    traverse_tree_by_level(root, (node) => {
+      if (is_leaf(node)) {
+        return;
+      }
+
+      // create line node
+      let line_node = new LineNode();
+      line_node.color = this.line_color;
+      line_node.border_width = this.line_width;
+
+      let children_len = node.children.length;
+      if (children_len === 1) {
+        // type: Line
+        line_node.pos_x = ~~(node.pos_x + node.width / 2 - this.line_width / 2);
+        line_node.pos_y = node.pos_y + node.height;
+        line_node.width = this.line_width;
+        line_node.height = this.vertical_gap;
+        line_node.type = LineType.Line;
+      } else {
+        // type: Square
+        line_node.type = LineType.Square;
+
+        // get the first and last sub node
+        let first = node.children[0];
+        let last = node.children[node.children.length - 1];
+
+        // get the mid pos of a card
+        let start = first.pos_x + first.width / 2 - this.line_width / 2;
+        let end = last.pos_x + last.width / 2 - this.line_width / 2;
+
+        // update line info
+        line_node.pos_x = start;
+        line_node.height = (this.vertical_gap + this.line_width) / 2;
+        line_node.pos_y = first.pos_y - line_node.height;
+        line_node.width = end - start;
+      }
+
+      this.line_list.push(line_node);
+    });
   }
 
   get_render_data(): ChartRenderData {
