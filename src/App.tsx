@@ -31,7 +31,7 @@ function App() {
     // todo: test it
     let now = performance.now();
     let data = mock_org_chart_data(
-      ~~(Math.random() * 20) + 1,
+      ~~(Math.random() * 15) + 1,
       ~~(Math.random() * 5) + 1,
       true
     );
