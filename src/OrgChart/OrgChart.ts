@@ -1,5 +1,10 @@
 // Import Utils
-import { is_even, is_leaf, traverse_tree_by_dfs } from "./utils";
+import {
+  is_even,
+  is_leaf,
+  traverse_tree_by_dfs,
+  traverse_tree_by_level,
+} from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
 // Interface
@@ -95,13 +100,12 @@ class OrgChart {
     this.link_level_prev_card_and_build_card_list();
 
     // update the horizon space for each node
-    this.previous_card = undefined;
     this.update_node_horizon_space(this.root);
 
     // todo: update the vertical space for each node
 
     // calculate the line pos
-    this.previous_card = undefined;
+    this.calculate_line_pos(this.root);
   }
 
   initialize_tree_from_raw_data(card_list: Array<any>) {
@@ -158,11 +162,16 @@ class OrgChart {
     }
   }
 
-  update_node_horizon_space(root: CardNode) {
-    traverse_tree_by_dfs(root, (node) => {
-      // todo: for test only
-      console.log(`node id: ${node.id}`);
+  calculate_line_pos(root: CardNode) {
+    traverse_tree_by_level(root, (node) => {
+      console.log(node.id);
+    });
+  }
 
+  update_node_horizon_space(root: CardNode) {
+    this.previous_card = undefined;
+
+    traverse_tree_by_dfs(root, (node) => {
       // most left node of each subtree
       this.update_node_horizon_space_most_left_leaf(node);
 
