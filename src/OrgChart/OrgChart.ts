@@ -319,18 +319,36 @@ class OrgChart {
         line_node.width = end - start;
 
         // add line type line
-        let parent_to_sub_line_node = new LineNode();
-        parent_to_sub_line_node.color = this.line_color;
-        parent_to_sub_line_node.border_width = this.line_width;
-        parent_to_sub_line_node.border_radius = this.line_radius;
-        parent_to_sub_line_node.pos_x =
+        let parent_to_category_line = new LineNode();
+        parent_to_category_line.color = this.line_color;
+        parent_to_category_line.border_width = this.line_width;
+        parent_to_category_line.border_radius = this.line_radius;
+        parent_to_category_line.pos_x =
           node.pos_x + (node.width - this.line_width) / 2;
-        parent_to_sub_line_node.pos_y = node.pos_y + node.height;
-        parent_to_sub_line_node.width = this.line_width;
-        parent_to_sub_line_node.height =
+        parent_to_category_line.pos_y = node.pos_y + node.height;
+        parent_to_category_line.width = this.line_width;
+        parent_to_category_line.height =
           (this.vertical_gap - this.line_width) / 2;
-        parent_to_sub_line_node.type = LineType.Line;
-        this.line_list.push(parent_to_sub_line_node);
+        parent_to_category_line.type = LineType.Line;
+        this.line_list.push(parent_to_category_line);
+
+        // middle line when more than 2 children
+        for (let i = 1; i < node.children.length - 1; i++) {
+          let child = node.children[i];
+          let parent_to_node_line = new LineNode();
+          parent_to_node_line.color = this.line_color;
+          parent_to_node_line.border_width = this.line_width;
+          parent_to_node_line.border_radius = this.line_radius;
+          parent_to_node_line.pos_x =
+            child.pos_x + (child.width - this.line_width) / 2;
+          parent_to_node_line.pos_y =
+            child.pos_y - (this.vertical_gap + this.line_width) / 2;
+          parent_to_node_line.width = this.line_width;
+          parent_to_node_line.height =
+            (this.vertical_gap + this.line_width) / 2;
+          parent_to_category_line.type = LineType.Line;
+          this.line_list.push(parent_to_node_line);
+        }
       }
 
       this.line_list.push(line_node);

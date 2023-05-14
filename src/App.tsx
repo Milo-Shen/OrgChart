@@ -30,15 +30,11 @@ function App() {
 
     // todo: test it
     let now = performance.now();
-    // let data = mock_org_chart_data(
-    //   ~~(Math.random() * 20) + 1,
-    //   ~~(Math.random() * 5) + 1,
-    //   true
-    // );
-    let data = mock_org_chart_data(10, 3, false);
-    // data[7].children.push("id=11");
-    // data.push({ children: ["id=12"], id: "id=11", name: "id=11" });
-    // data.push({ children: [], id: "id=12", name: "id=12" });
+    let data = mock_org_chart_data(
+      ~~(Math.random() * 20) + 1,
+      ~~(Math.random() * 5) + 1,
+      true
+    );
     let chart = new OrgChart(data, true, 200, 100, 10, 41, 2, "#6A6D70", 12);
     let render_data = chart.get_render_data();
     console.log(`${performance.now() - now} ms`);
