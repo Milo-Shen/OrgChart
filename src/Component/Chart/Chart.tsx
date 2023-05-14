@@ -1,26 +1,36 @@
 // Import React Framework
 import React, { ReactNode } from "react";
 
-// Import Interface
-import { CardNode } from "../../OrgChart/OrgChart";
+// Import Interface & Types & Classes
+import { CardNode, ChartRenderData } from "../../OrgChart/OrgChart";
+
+// Import Customized Component
+import Line from "../Line";
 
 // Import CSS
 import ChartStyle from "./Chart.module.css";
-import { DoublyLinkedList } from "../../OrgChart/DoublyLinkedList";
 
 // Interface
 interface ChartPropsInterface {
-  list: CardNode[] | DoublyLinkedList;
+  data: ChartRenderData;
   card_template: (card: CardNode) => ReactNode;
   children?: ReactNode | ReactNode[];
 }
 
 function Chart(props: ChartPropsInterface) {
-  const { list, card_template } = props;
+  const { data, card_template } = props;
 
   return (
     <div className={ChartStyle.chart}>
-      {list.map((card) => card_template(card))}
+      {data.card_list.map((card) => card_template(card))}
+      {data.line_list.map((line) => (
+        <Line
+          width={line.width}
+          height={line.height}
+          pos_x={line.pos_x}
+          pos_y={line.pos_y}
+        />
+      ))}
     </div>
   );
 }

@@ -14,6 +14,13 @@ export enum LineType {
   Middle = "Middle",
 }
 
+export type ChartRenderData = {
+  card_list: CardNode[] | DoublyLinkedList;
+  line_list: LineNode[];
+};
+
+export const chartRenderDefaultData = { card_list: [], line_list: [] };
+
 class LineNode {
   pos_x: number;
   pos_y: number;
@@ -71,6 +78,7 @@ class OrgChart {
   card_linked_list: DoublyLinkedList;
   line_list: Array<LineNode>;
   line_width: number;
+  line_color: string;
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
@@ -87,12 +95,14 @@ class OrgChart {
     fixed_height?: number,
     horizon_gap = 10,
     vertical_gap = 40,
-    line_width = 1
+    line_width = 1,
+    line_color: string = "#6A6D70"
   ) {
     // initialization
     this.card_list = [];
     this.line_list = [];
     this.line_width = line_width;
+    this.line_color = line_color;
     this.fixed_size = fixed_size;
     this.fixed_width = fixed_width;
     this.fixed_height = fixed_height;
@@ -211,9 +221,11 @@ class OrgChart {
       if (children_len === 1) {
         line_node.width = this.line_width;
         line_node.height = this.vertical_gap;
-        line_node.pos_x = ~~(node.pos_x / 2 - this.line_width / 2);
+        line_node.pos_x = ~~(node.pos_x + node.width / 2 - this.line_width / 2);
         line_node.pos_y = node.pos_y + node.height;
       }
+
+      this.line_list.push(line_node);
     });
   }
 
@@ -305,9 +317,12 @@ class OrgChart {
     }
   }
 
-  get_render_data() {
+  get_render_data(): ChartRenderData {
     // return this.card_list;
-    return this.card_linked_list;
+    return {
+      card_list: this.card_linked_list,
+      line_list: this.line_list,
+    };
   }
 }
 
