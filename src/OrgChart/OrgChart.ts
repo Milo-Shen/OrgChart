@@ -287,24 +287,18 @@ class OrgChart {
       }
 
       // create line node
-      let line_node = new LineNode();
-      line_node.color = this.line_color;
-      line_node.border_width = this.line_width;
-      line_node.border_radius = this.line_radius;
-
       let children_len = node.children.length;
-      if (children_len === 1) {
-        // type: Line
-        line_node.pos_x = node.pos_x + (node.width - this.line_width) / 2;
-        line_node.pos_y = node.pos_y + node.height;
-        line_node.width = this.line_width;
-        line_node.height = this.vertical_gap;
-        line_node.type = LineType.Line;
-      } else {
-        // type: Square
-        line_node.type = LineType.Square;
 
-        // get the first and last sub node
+      // case one: one parent has one child
+      if (children_len === 1) {
+        let x = node.pos_x + (node.width - this.line_width) / 2;
+        let y = node.pos_y + node.height;
+        let w = this.line_width;
+        let h = this.vertical_gap;
+        let line_node = this.create_line_node(LineType.Line, x, y, w, h);
+        this.line_list.push(line_node);
+      } else {
+        // case two: one parent has multi children
         let first = node.children[0];
         let last = node.children[node.children.length - 1];
 
@@ -313,46 +307,46 @@ class OrgChart {
         let end = last.pos_x + (last.width - this.line_width) / 2;
 
         // update line info
-        line_node.pos_x = start;
-        line_node.height = (this.vertical_gap + this.line_width) / 2;
-        line_node.pos_y = first.pos_y - line_node.height;
-        line_node.width = end - start;
+        let x = start;
+        let h = (this.vertical_gap + this.line_width) / 2;
+        let y = first.pos_y - h;
+        let w = end - start;
+        let square_node = this.create_line_node(LineType.Square, x, y, w, h);
+        this.line_list.push(square_node);
 
-        // add line type line
-        let parent_to_category_line = new LineNode();
-        parent_to_category_line.color = this.line_color;
-        parent_to_category_line.border_width = this.line_width;
-        parent_to_category_line.border_radius = this.line_radius;
-        parent_to_category_line.pos_x =
-          node.pos_x + (node.width - this.line_width) / 2;
-        parent_to_category_line.pos_y = node.pos_y + node.height;
-        parent_to_category_line.width = this.line_width;
-        parent_to_category_line.height =
-          (this.vertical_gap - this.line_width) / 2;
-        parent_to_category_line.type = LineType.Line;
-        this.line_list.push(parent_to_category_line);
+        // case three: parent to category line
+        x = node.pos_x + (node.width - this.line_width) / 2;
+        y = node.pos_y + node.height;
+        w = this.line_width;
+        h = (this.vertical_gap - this.line_width) / 2;
+        let p_to_c_line = this.create_line_node(LineType.Line, x, y, w, h);
+        this.line_list.push(p_to_c_line);
 
-        // middle line when more than 2 children
+        // case four: parent to node line
         for (let i = 1; i < node.children.length - 1; i++) {
           let child = node.children[i];
-          let parent_to_node_line = new LineNode();
-          parent_to_node_line.color = this.line_color;
-          parent_to_node_line.border_width = this.line_width;
-          parent_to_node_line.border_radius = this.line_radius;
-          parent_to_node_line.pos_x =
-            child.pos_x + (child.width - this.line_width) / 2;
-          parent_to_node_line.pos_y =
-            child.pos_y - (this.vertical_gap + this.line_width) / 2;
-          parent_to_node_line.width = this.line_width;
-          parent_to_node_line.height =
-            (this.vertical_gap + this.line_width) / 2;
-          parent_to_category_line.type = LineType.Line;
-          this.line_list.push(parent_to_node_line);
+          let x = child.pos_x + (child.width - this.line_width) / 2;
+          let y = child.pos_y - (this.vertical_gap + this.line_width) / 2;
+          let w = this.line_width;
+          let h = (this.vertical_gap + this.line_width) / 2;
+          let p_to_n_line = this.create_line_node(LineType.Line, x, y, w, h);
+          this.line_list.push(p_to_n_line);
         }
       }
-
-      this.line_list.push(line_node);
     });
+  }
+
+  create_line_node(type: LineType, x: number, y: number, w: number, h: number) {
+    let line_node = new LineNode();
+    line_node.type = type;
+    line_node.color = this.line_color;
+    line_node.border_width = this.line_width;
+    line_node.border_radius = this.line_radius;
+    line_node.pos_x = x;
+    line_node.pos_y = y;
+    line_node.width = w;
+    line_node.height = h;
+    return line_node;
   }
 
   get_render_data(): ChartRenderData {
