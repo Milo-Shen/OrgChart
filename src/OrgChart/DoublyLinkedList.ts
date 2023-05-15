@@ -64,19 +64,19 @@ export class DoublyLinkedList {
     // update the length of linked list
     this.length++;
 
-    // Make new node to be a head.
+    // make new node to be a head.
     const new_node = new DoublyLinkedListNode(value, this.head);
 
-    // If there is head, then it won't be head anymore.
-    // Therefore, make its previous reference to be new node (new head).
-    // Then mark the new node as head.
+    // if there is head, then it won't be head anymore.
+    // therefore, make its previous reference to be new node (new head).
+    // then mark the new node as head.
     if (this.head) {
       this.head.previous = new_node;
     }
 
     this.head = new_node;
 
-    // If there is no tail yet let's make new node a tail.
+    // if there is no tail yet let's make new node a tail.
     if (!this.tail) {
       this.tail = new_node;
     }
@@ -90,20 +90,20 @@ export class DoublyLinkedList {
 
     const new_node = new DoublyLinkedListNode(value);
 
-    // If there is no head yet let's make new node a head.
+    // if there is no head yet let's make new node a head.
     if (!this.head) {
       this.head = new_node;
       this.tail = new_node;
       return this;
     }
 
-    // Attach new node to the end of linked list.
+    // attach new node to the end of linked list.
     this.tail!.next = new_node;
 
-    // Attach current tail to the new node's previous reference.
+    // attach current tail to the new node's previous reference.
     new_node.previous = this.tail;
 
-    // Set new node to be the tail of linked list.
+    // set new node to be the tail of linked list.
     this.tail = new_node;
 
     return this;
@@ -122,9 +122,9 @@ export class DoublyLinkedList {
         deleted_node = current_node;
 
         if (deleted_node === this.head) {
-          // If HEAD is going to be deleted...
+          // if head is going to be deleted...
 
-          // Set head to second node, which will become new head.
+          // set head to second node, which will become new head.
           this.head = deleted_node.next;
 
           // Set new head's previous to undefined.
@@ -138,12 +138,12 @@ export class DoublyLinkedList {
             this.tail = undefined;
           }
         } else if (deleted_node === this.tail) {
-          // If TAIL is going to be deleted...
-          // Set tail to second last node, which will become new tail.
+          // if tail is going to be deleted...
+          // set tail to second last node, which will become new tail.
           this.tail = deleted_node.previous;
           this.tail!.next = undefined;
         } else {
-          // If MIDDLE node is going to be deleted...
+          // if middle node is going to be deleted...
           const previous_node = deleted_node.previous;
           const next_node = deleted_node.next;
 
@@ -169,12 +169,12 @@ export class DoublyLinkedList {
     let current_node: NodeType = this.head;
 
     while (current_node) {
-      // If callback is specified then try to find node by callback.
+      // if callback is specified then try to find node by callback.
       if (callback && callback(current_node.value)) {
         return current_node?.value;
       }
 
-      // If value is specified then try to compare by value...
+      // if value is specified then try to compare by value...
       if (
         value !== undefined &&
         this.compare.equal(current_node.value, value)
@@ -262,20 +262,20 @@ export class DoublyLinkedList {
     let next_node = undefined;
 
     while (curr_node) {
-      // Store next node.
+      // store next node.
       next_node = curr_node.next;
       prev_node = curr_node.previous;
 
-      // Change next node of the current node, so it would link to previous node.
+      // change next node of the current node, so it would link to previous node.
       curr_node.next = prev_node;
       curr_node.previous = next_node;
 
-      // Move prev_node and curr_node nodes one step forward.
+      // move prev_node and curr_node nodes one step forward.
       prev_node = curr_node;
       curr_node = next_node;
     }
 
-    // Reset head and tail.
+    // reset head and tail.
     this.tail = this.head;
     this.head = prev_node;
 

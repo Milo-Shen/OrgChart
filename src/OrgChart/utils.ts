@@ -16,9 +16,9 @@ export function traverse_tree_by_level(
   node: CardNode,
   callback: (node: CardNode) => void
 ) {
-  let queue = [node];
+  let queue = DoublyLinkedList.from_array([node]);
 
-  while (queue.length) {
+  while (!queue.is_empty()) {
     let card = queue.shift()!;
     callback(card);
 
