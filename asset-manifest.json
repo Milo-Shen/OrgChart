@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/OrgChart/static/css/main.93a8882f.css",
-    "main.js": "/OrgChart/static/js/main.6637e018.js",
+    "main.js": "/OrgChart/static/js/main.0f3efaa6.js",
     "index.html": "/OrgChart/index.html",
     "main.93a8882f.css.map": "/OrgChart/static/css/main.93a8882f.css.map",
-    "main.6637e018.js.map": "/OrgChart/static/js/main.6637e018.js.map"
+    "main.0f3efaa6.js.map": "/OrgChart/static/js/main.0f3efaa6.js.map"
   },
   "entrypoints": [
     "static/css/main.93a8882f.css",
-    "static/js/main.6637e018.js"
+    "static/js/main.0f3efaa6.js"
   ]
 }
