@@ -12,20 +12,20 @@ import { DoublyLinkedList } from "./DoublyLinkedList";
 
 // Export Classes, Interfaces, Type
 export type ChartRenderData = {
-  card_list: CardNode[] | DoublyLinkedList;
+  card_list: CardNode<number>[] | DoublyLinkedList;
   line_list: LineNode[];
 };
 
 // Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
 
-class CardNode {
+class CardNode<T> {
   id: string;
   name: string;
-  children: Array<CardNode>;
-  parent?: CardNode;
-  previous?: CardNode;
-  level_previous?: CardNode;
+  children: Array<CardNode<T>>;
+  parent?: CardNode<T>;
+  previous?: CardNode<T>;
+  level_previous?: CardNode<T>;
   width: number;
   height: number;
   ratio_pos_x: number;
@@ -49,11 +49,11 @@ class CardNode {
   }
 }
 
-class OrgChart {
-  root?: CardNode;
-  previous_card?: CardNode;
-  card_map?: Map<string, CardNode>;
-  card_list: Array<CardNode>;
+class OrgChart<T> {
+  root?: CardNode<T>;
+  previous_card?: CardNode<T>;
+  card_map?: Map<string, CardNode<T>>;
+  card_list: Array<CardNode<T>>;
   card_linked_list: DoublyLinkedList;
   line_list: Array<LineNode>;
   line_width: number;
@@ -126,7 +126,7 @@ class OrgChart {
     this.calculate_line_pos(this.root);
   }
 
-  initialize_fixed_width_height_of_a_node(node: CardNode) {
+  initialize_fixed_width_height_of_a_node(node: CardNode<T>) {
     // process the fixed size type
     if (this.fixed_size && this.fixed_width && this.fixed_height) {
       node.width = this.fixed_width;
@@ -192,7 +192,7 @@ class OrgChart {
     }
   }
 
-  update_node_horizon_space(root: CardNode) {
+  update_node_horizon_space(root: CardNode<T>) {
     this.previous_card = undefined;
 
     traverse_tree_by_dfs(root, (node) => {
@@ -210,7 +210,7 @@ class OrgChart {
     });
   }
 
-  update_node_horizon_space_most_left_leaf(node: CardNode) {
+  update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
     // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
       node.ratio_pos_x = 0;
@@ -219,7 +219,7 @@ class OrgChart {
     }
   }
 
-  update_node_horizon_space_sibling_nodes(node: CardNode) {
+  update_node_horizon_space_sibling_nodes(node: CardNode<T>) {
     // sibling node
     if (node.previous === this.previous_card) {
       node.ratio_pos_x = node.previous!.ratio_pos_x + 1;
@@ -227,7 +227,7 @@ class OrgChart {
     }
   }
 
-  update_node_horizon_space_parent_node(node: CardNode) {
+  update_node_horizon_space_parent_node(node: CardNode<T>) {
     if (this.previous_card?.parent === node) {
       if (node.children.length === 1) {
         // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
@@ -248,7 +248,7 @@ class OrgChart {
     }
   }
 
-  convert_ratio_coordinate_to_detail_val(node: CardNode) {
+  convert_ratio_coordinate_to_detail_val(node: CardNode<T>) {
     // convert coordinate ratio to detailed coordinate value
     if (this.fixed_overall_width) {
       node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
@@ -259,7 +259,7 @@ class OrgChart {
     }
   }
 
-  readjust_horizon_pos_of_subtree(node: CardNode) {
+  readjust_horizon_pos_of_subtree(node: CardNode<T>) {
     if (node.level_previous) {
       let min_pos = node.level_previous.ratio_pos_x + 1;
       if (min_pos < node.ratio_pos_x) {
@@ -280,7 +280,7 @@ class OrgChart {
     }
   }
 
-  calculate_line_pos(root: CardNode) {
+  calculate_line_pos(root: CardNode<T>) {
     traverse_tree_by_level(root, (node) => {
       if (is_leaf(node)) {
         return;
