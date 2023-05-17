@@ -59,7 +59,7 @@ function App() {
 
   return (
     <div className="App">
-      <Chart
+      <Chart<string>
         data={card_list}
         card_template={(card: CardNode<string>) => (
           <SimpleOrgChart
