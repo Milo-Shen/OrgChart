@@ -11,8 +11,8 @@ import {
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
 // Export Classes, Interfaces, Type
-export type ChartRenderData = {
-  card_list: CardNode<number>[] | DoublyLinkedList;
+export type ChartRenderData<T> = {
+  card_list: CardNode<T>[] | DoublyLinkedList;
   line_list: LineNode[];
 };
 
@@ -22,6 +22,7 @@ export const chartRenderDefaultData = { card_list: [], line_list: [] };
 class CardNode<T> {
   id: string;
   name: string;
+  content?: T;
   children: Array<CardNode<T>>;
   parent?: CardNode<T>;
   previous?: CardNode<T>;
@@ -33,7 +34,13 @@ class CardNode<T> {
   pos_x: number;
   pos_y: number;
 
-  constructor(id: string, name: string, w: number = 0, h: number = 0) {
+  constructor(
+    id: string,
+    name: string,
+    content: T = undefined as T,
+    w: number = 0,
+    h: number = 0
+  ) {
     this.id = id;
     this.name = name;
     this.children = [];
@@ -46,6 +53,7 @@ class CardNode<T> {
     this.ratio_pos_y = 0;
     this.pos_x = -Infinity;
     this.pos_y = 0;
+    this.content = content;
   }
 }
 
@@ -106,7 +114,7 @@ class OrgChart<T> {
 
     // create the root node
     let root_data = card_list[0];
-    this.root = new CardNode(root_data.id, root_data.name);
+    this.root = new CardNode<T>(root_data.id, root_data.name);
     this.initialize_fixed_width_height_of_a_node(this.root);
     this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
@@ -140,7 +148,7 @@ class OrgChart<T> {
     // build card node map
     for (let i = 1; i < card_list_len; i++) {
       let { id, name } = card_list[i];
-      let new_card = new CardNode(id, name);
+      let new_card = new CardNode<T>(id, name);
 
       // process the fixed size type
       this.initialize_fixed_width_height_of_a_node(new_card);
@@ -349,7 +357,7 @@ class OrgChart<T> {
     return line_node;
   }
 
-  get_render_data(): ChartRenderData {
+  get_render_data(): ChartRenderData<T> {
     // return this.card_list;
     return {
       card_list: this.card_linked_list,

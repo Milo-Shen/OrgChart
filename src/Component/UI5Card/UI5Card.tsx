@@ -2,9 +2,17 @@
 import React from "react";
 
 // Import CSS
-import SimpleOrgChartStyle from "./SimpleOrgChart.module.css";
+import UI5CardStyle from "./UI5Card.module.css";
 
-function SimpleOrgChart(props: any) {
+export interface UI5CardInterface {
+  avatar: string;
+  name?: string;
+  position?: string;
+  total_subordinate: number;
+  actual_subordinate: number;
+}
+
+function UI5Card(props: any) {
   const {
     name,
     parent_id,
@@ -23,7 +31,7 @@ function SimpleOrgChart(props: any) {
         left: `${pos_x}px`,
         top: `${pos_y}px`,
       }}
-      className={SimpleOrgChartStyle.simple_org_chart}
+      className={UI5CardStyle.simple_org_chart}
     >
       id: {name}
       <br />
@@ -36,4 +44,4 @@ function SimpleOrgChart(props: any) {
   );
 }
 
-export default SimpleOrgChart;
+export default UI5Card;

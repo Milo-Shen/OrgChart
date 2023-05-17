@@ -8,13 +8,13 @@ export function is_even(num: number): boolean {
   return num % 2 === 0;
 }
 
-export function is_leaf(node: CardNode) {
+export function is_leaf<T>(node: CardNode<T>) {
   return !node.children.length;
 }
 
-export function traverse_tree_by_level(
-  node: CardNode,
-  callback: (node: CardNode) => void
+export function traverse_tree_by_level<T>(
+  node: CardNode<T>,
+  callback: (node: CardNode<T>) => void
 ) {
   let queue = DoublyLinkedList.from_array([node]);
 
@@ -29,9 +29,9 @@ export function traverse_tree_by_level(
   }
 }
 
-export function traverse_tree_by_dfs(
-  root: CardNode,
-  callback: (node: CardNode) => void
+export function traverse_tree_by_dfs<T>(
+  root: CardNode<T>,
+  callback: (node: CardNode<T>) => void
 ) {
   if (!root) {
     return;
