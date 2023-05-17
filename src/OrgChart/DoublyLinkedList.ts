@@ -282,7 +282,7 @@ export class DoublyLinkedList {
     return this;
   }
 
-  map(callback: (card: CardNode) => ReactNode): ReactNode {
+  map<T>(callback: (card: CardNode<T>) => ReactNode): ReactNode {
     let result: ReactNode[] = [];
 
     let p = this.head;

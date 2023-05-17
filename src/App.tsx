@@ -19,7 +19,7 @@ import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
 function App() {
   let is_fetch = useRef(false);
 
-  let [card_list, set_card_list] = useState<ChartRenderData>(
+  let [card_list, set_card_list] = useState<ChartRenderData<string>>(
     chartRenderDefaultData
   );
 
@@ -35,7 +35,17 @@ function App() {
       ~~(Math.random() * 5) + 1,
       true
     );
-    let chart = new OrgChart(data, true, 200, 100, 10, 41, 2, "#6A6D70", 12);
+    let chart = new OrgChart<string>(
+      data,
+      true,
+      200,
+      100,
+      10,
+      41,
+      2,
+      "#6A6D70",
+      12
+    );
     let render_data = chart.get_render_data();
     console.log(`${performance.now() - now} ms`);
     set_card_list(render_data);
@@ -51,7 +61,7 @@ function App() {
     <div className="App">
       <Chart
         data={card_list}
-        card_template={(card: CardNode) => (
+        card_template={(card: CardNode<string>) => (
           <SimpleOrgChart
             key={card.id}
             name={card.name}

@@ -11,16 +11,17 @@ import Line from "../Line";
 import ChartStyle from "./Chart.module.css";
 
 // Interface
-interface ChartPropsInterface {
-  data: ChartRenderData;
-  card_template: (card: CardNode) => ReactNode;
+interface ChartPropsInterface<T> {
+  data: ChartRenderData<T>;
+  card_template: (card: CardNode<T>) => ReactNode;
   children?: ReactNode | ReactNode[];
 }
 
-function Chart(props: ChartPropsInterface) {
+function Chart(props: ChartPropsInterface<any>) {
   const { data, card_template } = props;
 
   return (
+    // @ts-ignore
     <div className={ChartStyle.chart}>
       {data.card_list.map((card) => card_template(card))}
       {/* todo: key of line should be identified */}
