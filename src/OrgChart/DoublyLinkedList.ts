@@ -1,19 +1,18 @@
 // Import Utils
 import Comparator from "./utils";
-import { CardNode } from "./OrgChart";
 import { ReactNode } from "react";
 
-export type NodeType = DoublyLinkedListNode | undefined;
+export type NodeType<T> = DoublyLinkedListNode<T> | undefined;
 
-export class DoublyLinkedListNode {
-  value: any;
-  next?: DoublyLinkedListNode;
-  previous?: DoublyLinkedListNode;
+export class DoublyLinkedListNode<T> {
+  value: T;
+  next?: DoublyLinkedListNode<T>;
+  previous?: DoublyLinkedListNode<T>;
 
   constructor(
     value: any = undefined,
-    next?: DoublyLinkedListNode,
-    previous?: DoublyLinkedListNode
+    next?: DoublyLinkedListNode<T>,
+    previous?: DoublyLinkedListNode<T>
   ) {
     this.value = value;
     this.next = next;
@@ -25,9 +24,9 @@ export class DoublyLinkedListNode {
   }
 }
 
-export class DoublyLinkedList {
-  head?: DoublyLinkedListNode;
-  tail?: DoublyLinkedListNode;
+export class DoublyLinkedList<T> {
+  head?: DoublyLinkedListNode<T>;
+  tail?: DoublyLinkedListNode<T>;
   compare: Comparator;
   length: number;
 
@@ -38,8 +37,8 @@ export class DoublyLinkedList {
     this.compare = new Comparator(comparatorFunction);
   }
 
-  static from_array(values: any) {
-    let linked_list = new DoublyLinkedList();
+  static from_array<T>(values: any) {
+    let linked_list = new DoublyLinkedList<T>();
     values.forEach((value: any) => linked_list.push(value));
     return linked_list;
   }
@@ -88,7 +87,7 @@ export class DoublyLinkedList {
     // update the length of linked list
     this.length++;
 
-    const new_node = new DoublyLinkedListNode(value);
+    const new_node = new DoublyLinkedListNode<T>(value);
 
     // if there is no head yet let's make new node a head.
     if (!this.head) {
@@ -115,10 +114,10 @@ export class DoublyLinkedList {
     }
 
     let deleted_node = undefined;
-    let current_node: NodeType = this.head;
+    let current_node: NodeType<T> = this.head;
 
     while (current_node) {
-      if (this.compare.equal(current_node.value, value)) {
+      if (this.compare.equal(current_node.value as number, value)) {
         deleted_node = current_node;
 
         if (deleted_node === this.head) {
@@ -166,7 +165,7 @@ export class DoublyLinkedList {
       return undefined;
     }
 
-    let current_node: NodeType = this.head;
+    let current_node: NodeType<T> = this.head;
 
     while (current_node) {
       // if callback is specified then try to find node by callback.
@@ -177,7 +176,7 @@ export class DoublyLinkedList {
       // if value is specified then try to compare by value...
       if (
         value !== undefined &&
-        this.compare.equal(current_node.value, value)
+        this.compare.equal(current_node.value as number, value)
       ) {
         return current_node?.value;
       }
@@ -282,13 +281,13 @@ export class DoublyLinkedList {
     return this;
   }
 
-  map<T>(callback: (card: CardNode<T>) => ReactNode): ReactNode {
+  map(callback: (card: T) => ReactNode): ReactNode {
     let result: ReactNode[] = [];
 
     let p = this.head;
 
     while (p && p.value) {
-      result.push(callback(p.value));
+      result.push(callback(p.value as T));
       p = p.next;
     }
 

@@ -22,7 +22,7 @@ function Chart<T>(props: ChartPropsInterface<T>) {
 
   return (
     <div className={ChartStyle.chart}>
-      <>{data.card_list.map((card: any) => card_template(card))}</>
+      <>{data.card_list.map((card) => card_template(card))}</>
       {/* todo: key of line should be identified */}
       <>
         {data.line_list.map((line, index) => (

@@ -12,7 +12,7 @@ import { DoublyLinkedList } from "./DoublyLinkedList";
 
 // Export Classes, Interfaces, Type
 export type ChartRenderData<T> = {
-  card_list: CardNode<T>[] | DoublyLinkedList;
+  card_list: CardNode<T>[] | DoublyLinkedList<CardNode<T>>;
   line_list: LineNode[];
 };
 
@@ -62,7 +62,7 @@ class OrgChart<T> {
   previous_card?: CardNode<T>;
   card_map?: Map<string, CardNode<T>>;
   card_list: Array<CardNode<T>>;
-  card_linked_list: DoublyLinkedList;
+  card_linked_list: DoublyLinkedList<CardNode<T>>;
   line_list: Array<LineNode>;
   line_width: number;
   line_color: string;
@@ -173,7 +173,7 @@ class OrgChart<T> {
 
   link_level_prev_card_and_build_card_list() {
     let level = -1;
-    let queue = DoublyLinkedList.from_array([this.root]);
+    let queue = DoublyLinkedList.from_array<CardNode<T>>([this.root]);
 
     while (!queue.is_empty()) {
       level++;
@@ -275,7 +275,7 @@ class OrgChart<T> {
       }
 
       let diff = min_pos - node.ratio_pos_x;
-      let queue = DoublyLinkedList.from_array([node]);
+      let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
 
       while (!queue.is_empty()) {
         let node = queue.shift();
