@@ -12,8 +12,8 @@ export class DoublyLinkedListNode {
 
   constructor(
     value: any = undefined,
-    next: NodeType = undefined,
-    previous: NodeType = undefined
+    next?: DoublyLinkedListNode,
+    previous?: DoublyLinkedListNode
   ) {
     this.value = value;
     this.next = next;
