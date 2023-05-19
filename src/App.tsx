@@ -1,8 +1,9 @@
 // Import React Framework
 import React, { useEffect, useRef, useState } from "react";
 
-// Import Types
+// Import Types & Interfaces
 import { ChartRenderData } from "./OrgChart/OrgChart";
+import { UI5CardInterface } from "./Component/UI5Card/UI5Card";
 
 // Import Customized Component
 import Chart from "./Component/Chart/Chart";
@@ -19,7 +20,7 @@ import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
 function App() {
   let is_fetch = useRef(false);
 
-  let [card_list, set_card_list] = useState<ChartRenderData<string>>(
+  let [card_list, set_card_list] = useState<ChartRenderData<UI5CardInterface>>(
     chartRenderDefaultData
   );
 
@@ -35,7 +36,7 @@ function App() {
       ~~(Math.random() * 5) + 1,
       true
     );
-    let chart = new OrgChart<string>(
+    let chart = new OrgChart<UI5CardInterface>(
       data,
       true,
       200,
@@ -59,9 +60,9 @@ function App() {
 
   return (
     <div className="App">
-      <Chart<string>
+      <Chart<UI5CardInterface>
         data={card_list}
-        card_template={(card: CardNode<string>) => (
+        card_template={(card: CardNode<UI5CardInterface>) => (
           <SimpleOrgChart
             key={card.id}
             name={card.name}
