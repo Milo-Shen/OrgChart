@@ -2,12 +2,7 @@
 import { LineNode, LineType } from "./Line";
 
 // Import Utils
-import {
-  is_even,
-  is_leaf,
-  traverse_tree_by_dfs,
-  traverse_tree_by_level,
-} from "./utils";
+import { is_even, is_leaf, traverse_tree_by_dfs, traverse_tree_by_level } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
 // Export Classes, Interfaces, Type
@@ -34,13 +29,7 @@ class CardNode<T> {
   pos_x: number;
   pos_y: number;
 
-  constructor(
-    id: string,
-    name: string,
-    content: T = undefined as T,
-    w: number = 0,
-    h: number = 0
-  ) {
+  constructor(id: string, name: string, content: T = undefined as T, w: number = 0, h: number = 0) {
     this.id = id;
     this.name = name;
     this.children = [];
@@ -115,6 +104,8 @@ class OrgChart<T> {
     // create the root node
     let root_data = card_list[0];
     this.root = new CardNode<T>(root_data.id, root_data.name);
+    this.root.pos_y = 0;
+
     this.initialize_fixed_width_height_of_a_node(this.root);
     this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
@@ -172,18 +163,20 @@ class OrgChart<T> {
   }
 
   link_level_prev_card_and_build_card_list() {
-    let level = -1;
     let queue = DoublyLinkedList.from_array<CardNode<T>>([this.root]);
 
     while (!queue.is_empty()) {
-      level++;
-
       let len = queue.get_length();
       let pre_level_card = undefined;
 
       for (let i = 0; i < len; i++) {
-        let card = queue.shift();
-        card!.ratio_pos_y = level;
+        let card = queue.shift()!;
+        if (card.parent) {
+          card.pos_y = card.parent.pos_y + card.parent.height + this.vertical_gap;
+        } else {
+          card.pos_y = 0;
+        }
+
         card!.level_previous = pre_level_card;
         pre_level_card = card;
 
@@ -262,9 +255,9 @@ class OrgChart<T> {
       node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
     }
 
-    if (this.fixed_overall_height) {
-      node.pos_y = node.ratio_pos_y * this.fixed_overall_height;
-    }
+    // if (this.fixed_overall_height) {
+    //   node.pos_y = node.ratio_pos_y * this.fixed_overall_height;
+    // }
   }
 
   readjust_horizon_pos_of_subtree(node: CardNode<T>) {
