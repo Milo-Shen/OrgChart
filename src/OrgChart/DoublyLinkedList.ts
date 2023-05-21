@@ -9,11 +9,7 @@ export class DoublyLinkedListNode<T> {
   next?: DoublyLinkedListNode<T>;
   previous?: DoublyLinkedListNode<T>;
 
-  constructor(
-    value: any = undefined,
-    next?: DoublyLinkedListNode<T>,
-    previous?: DoublyLinkedListNode<T>
-  ) {
+  constructor(value: any = undefined, next?: DoublyLinkedListNode<T>, previous?: DoublyLinkedListNode<T>) {
     this.value = value;
     this.next = next;
     this.previous = previous;
@@ -174,10 +170,7 @@ export class DoublyLinkedList<T> {
       }
 
       // if value is specified then try to compare by value...
-      if (
-        value !== undefined &&
-        this.compare.equal(current_node.value as number, value)
-      ) {
+      if (value !== undefined && this.compare.equal(current_node.value as number, value)) {
         return current_node?.value;
       }
 

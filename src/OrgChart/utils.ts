@@ -12,10 +12,7 @@ export function is_leaf<T>(node: CardNode<T>) {
   return !node.children.length;
 }
 
-export function traverse_tree_by_level<T>(
-  node: CardNode<T>,
-  callback: (node: CardNode<T>) => void
-) {
+export function traverse_tree_by_level<T>(node: CardNode<T>, callback: (node: CardNode<T>) => void) {
   let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
 
   while (!queue.is_empty()) {
@@ -29,10 +26,7 @@ export function traverse_tree_by_level<T>(
   }
 }
 
-export function traverse_tree_by_dfs<T>(
-  root: CardNode<T>,
-  callback: (node: CardNode<T>) => void
-) {
+export function traverse_tree_by_dfs<T>(root: CardNode<T>, callback: (node: CardNode<T>) => void) {
   if (!root) {
     return;
   }
@@ -42,10 +36,7 @@ export function traverse_tree_by_dfs<T>(
 
   while (!stack.is_empty()) {
     let node = stack.last()!;
-    if (
-      !node.children.length ||
-      pre === node.children[node.children.length - 1]
-    ) {
+    if (!node.children.length || pre === node.children[node.children.length - 1]) {
       stack.pop();
       callback(node);
     } else {

@@ -13,16 +13,7 @@ export interface UI5CardInterface {
 }
 
 function UI5Card(props: any) {
-  const {
-    name,
-    parent_id,
-    width,
-    height,
-    pos_x,
-    pos_y,
-    ratio_pos_x,
-    ratio_pos_y,
-  } = props;
+  const { name, parent_id, width, height, pos_x, pos_y, ratio_pos_x } = props;
   return (
     <div
       style={{
@@ -39,7 +30,6 @@ function UI5Card(props: any) {
       <br />
       ratio_pos_x: {ratio_pos_x}
       <br />
-      ratio_pos_y: {ratio_pos_y}
     </div>
   );
 }

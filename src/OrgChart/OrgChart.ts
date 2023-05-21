@@ -25,7 +25,6 @@ class CardNode<T> {
   width: number;
   height: number;
   ratio_pos_x: number;
-  ratio_pos_y: number;
   pos_x: number;
   pos_y: number;
 
@@ -39,7 +38,6 @@ class CardNode<T> {
     this.width = w;
     this.height = h;
     this.ratio_pos_x = -Infinity;
-    this.ratio_pos_y = 0;
     this.pos_x = -Infinity;
     this.pos_y = 0;
     this.content = content;
@@ -254,10 +252,6 @@ class OrgChart<T> {
     if (this.fixed_overall_width) {
       node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
     }
-
-    // if (this.fixed_overall_height) {
-    //   node.pos_y = node.ratio_pos_y * this.fixed_overall_height;
-    // }
   }
 
   readjust_horizon_pos_of_subtree(node: CardNode<T>) {

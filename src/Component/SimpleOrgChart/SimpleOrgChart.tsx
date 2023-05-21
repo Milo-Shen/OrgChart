@@ -5,16 +5,7 @@ import React from "react";
 import SimpleOrgChartStyle from "./SimpleOrgChart.module.css";
 
 function SimpleOrgChart(props: any) {
-  const {
-    name,
-    parent_id,
-    width,
-    height,
-    pos_x,
-    pos_y,
-    ratio_pos_x,
-    ratio_pos_y,
-  } = props;
+  const { name, parent_id, width, height, pos_x, pos_y, ratio_pos_x } = props;
   return (
     <div
       style={{
@@ -31,7 +22,6 @@ function SimpleOrgChart(props: any) {
       <br />
       ratio_pos_x: {ratio_pos_x}
       <br />
-      ratio_pos_y: {ratio_pos_y}
     </div>
   );
 }

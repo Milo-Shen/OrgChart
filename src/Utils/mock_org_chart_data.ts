@@ -10,11 +10,7 @@ function build_card(): { id: string; name: string; children: any[] } {
   };
 }
 
-export function mock_org_chart_data(
-  count: number = 1,
-  max_child?: number,
-  is_range = false
-) {
+export function mock_org_chart_data(count: number = 1, max_child?: number, is_range = false) {
   max_child = max_child || Math.sqrt(count);
   let result = [];
   let queue = [];
