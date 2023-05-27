@@ -11,6 +11,12 @@ export type ChartRenderData<T> = {
   line_list: LineNode[];
 };
 
+export enum CardNodeType {
+  NORMAL = "NORMAL",
+  EXTEND = "EXTEND",
+  BATCH = "BATCH",
+}
+
 // Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
 
@@ -27,7 +33,7 @@ class CardNode<T> {
   ratio_pos_x: number;
   pos_x: number;
   pos_y: number;
-  combine_mode: boolean;
+  mode: CardNodeType;
 
   constructor(
     id: string,
@@ -35,7 +41,7 @@ class CardNode<T> {
     content: T = undefined as T,
     w: number = 0,
     h: number = 0,
-    combine_mode: boolean = false
+    mode: CardNodeType = CardNodeType.NORMAL
   ) {
     this.id = id;
     this.name = name;
@@ -49,7 +55,7 @@ class CardNode<T> {
     this.pos_x = -Infinity;
     this.pos_y = 0;
     this.content = content;
-    this.combine_mode = false;
+    this.mode = mode;
   }
 }
 
