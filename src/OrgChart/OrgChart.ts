@@ -27,8 +27,16 @@ class CardNode<T> {
   ratio_pos_x: number;
   pos_x: number;
   pos_y: number;
+  combine_mode: boolean;
 
-  constructor(id: string, name: string, content: T = undefined as T, w: number = 0, h: number = 0) {
+  constructor(
+    id: string,
+    name: string,
+    content: T = undefined as T,
+    w: number = 0,
+    h: number = 0,
+    combine_mode: boolean = false
+  ) {
     this.id = id;
     this.name = name;
     this.children = [];
@@ -41,6 +49,7 @@ class CardNode<T> {
     this.pos_x = -Infinity;
     this.pos_y = 0;
     this.content = content;
+    this.combine_mode = false;
   }
 }
 
