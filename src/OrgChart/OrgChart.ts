@@ -8,6 +8,7 @@ import { DoublyLinkedList } from "./DoublyLinkedList";
 // Export Classes, Interfaces, Type
 export type ChartRenderData<T> = {
   card_list: CardNode<T>[] | DoublyLinkedList<CardNode<T>>;
+  // todo: may convert line_list to linked list later
   line_list: LineNode[];
 };
 
@@ -27,7 +28,9 @@ class CardNode<T> {
   children: Array<CardNode<T>>;
   parent?: CardNode<T>;
   previous?: CardNode<T>;
+  level?: number;
   level_previous?: CardNode<T>;
+  level_first?: CardNode<T>;
   width: number;
   height: number;
   ratio_pos_x: number;
@@ -49,6 +52,8 @@ class CardNode<T> {
     this.parent = undefined;
     this.previous = undefined;
     this.level_previous = undefined;
+    this.level_first = undefined;
+    this.level = -Infinity;
     this.width = w;
     this.height = h;
     this.ratio_pos_x = -Infinity;
@@ -184,19 +189,29 @@ class OrgChart<T> {
   link_level_prev_card_and_build_card_list() {
     let queue = DoublyLinkedList.from_array<CardNode<T>>([this.root]);
 
+    // the current level of card node
+    let level = 0;
+
     while (!queue.is_empty()) {
       let len = queue.get_length();
       let pre_level_card = undefined;
+      level++;
 
+      let level_first = queue.first();
       for (let i = 0; i < len; i++) {
         let card = queue.shift()!;
+
         if (card.parent) {
           card.pos_y = card.parent.pos_y + card.parent.height + this.vertical_gap;
         } else {
           card.pos_y = 0;
         }
 
+        // link the level previous card node to the current node
         card!.level_previous = pre_level_card;
+        card!.level = level;
+        card!.level_first = level_first;
+
         pre_level_card = card;
 
         // build card_list
