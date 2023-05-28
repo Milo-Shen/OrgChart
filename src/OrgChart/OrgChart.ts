@@ -72,6 +72,8 @@ class OrgChart<T> {
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
+  extend_width?: number;
+  extend_height?: number;
   fixed_overall_width?: number;
   fixed_overall_height?: number;
   horizon_gap: number;
@@ -83,6 +85,8 @@ class OrgChart<T> {
     fixed_size: boolean = true,
     fixed_width?: number,
     fixed_height?: number,
+    extend_width?: number,
+    extend_height?: number,
     horizon_gap = 10,
     vertical_gap = 40,
     line_width = 1,
@@ -98,6 +102,8 @@ class OrgChart<T> {
     this.fixed_size = fixed_size;
     this.fixed_width = fixed_width;
     this.fixed_height = fixed_height;
+    this.extend_width = extend_width;
+    this.extend_height = extend_height;
     this.horizon_gap = horizon_gap;
     this.vertical_gap = vertical_gap;
     this.card_linked_list = new DoublyLinkedList();
