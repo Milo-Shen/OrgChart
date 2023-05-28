@@ -36,7 +36,6 @@ class CardNode<T> {
   level_first?: CardNode<T>;
   width: number;
   height: number;
-  ratio_pos_x: number;
   pos_x: number;
   pos_y: number;
   mode: CardNodeType;
@@ -59,7 +58,6 @@ class CardNode<T> {
     this.level = -Infinity;
     this.width = w;
     this.height = h;
-    this.ratio_pos_x = -Infinity;
     this.pos_x = -Infinity;
     this.pos_y = 0;
     this.content = content;
@@ -242,19 +240,16 @@ class OrgChart<T> {
 
       // go to the parent node
       this.update_node_horizon_space_parent_node(node);
-
-      // convert coordinate ratio to detailed coordinate value
-      this.convert_ratio_coordinate_to_detail_val(node);
     });
   }
 
   update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
     // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
-      if (node.level_previous?.ratio_pos_x) {
-        node.ratio_pos_x = node.level_previous.ratio_pos_x + 1;
+      if (node.level_previous?.pos_x) {
+        node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
       } else {
-        node.ratio_pos_x = 0;
+        node.pos_x = 0;
       }
 
       this.readjust_horizon_pos_of_subtree(node);
@@ -265,7 +260,7 @@ class OrgChart<T> {
   update_node_horizon_space_sibling_nodes(node: CardNode<T>) {
     // sibling node
     if (node.previous === this.previous_card) {
-      node.ratio_pos_x = node.previous!.ratio_pos_x + 1;
+      node.pos_x = node.previous!.pos_x + node.previous!.width + this.horizon_gap;
       this.previous_card = node;
     }
   }
@@ -274,16 +269,16 @@ class OrgChart<T> {
     if (this.previous_card?.parent === node) {
       if (node.children.length === 1) {
         // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
-        // if the parent only has one child, the ratio_pos_x of the parent node will as same as the child
-        node.ratio_pos_x = this.previous_card.ratio_pos_x;
+        // if the parent only has one child, the pos_x of the parent node will as same as the child
+        node.pos_x = this.previous_card.pos_x;
         // odd number case
       } else if (!is_even(node.children.length)) {
         let mid_pos = ~~(node.children.length / 2);
-        node.ratio_pos_x = node.children[mid_pos].ratio_pos_x;
+        node.pos_x = node.children[mid_pos].pos_x;
       } else {
-        let start = node.children[0].ratio_pos_x;
-        let end = node.children[node.children.length - 1].ratio_pos_x;
-        node.ratio_pos_x = (start + end) / 2;
+        let start = node.children[0].pos_x;
+        let end = node.children[node.children.length - 1].pos_x;
+        node.pos_x = (start + end) / 2;
       }
 
       this.readjust_horizon_pos_of_subtree(node);
@@ -291,28 +286,21 @@ class OrgChart<T> {
     }
   }
 
-  convert_ratio_coordinate_to_detail_val(node: CardNode<T>) {
-    // convert coordinate ratio to detailed coordinate value
-    if (this.fixed_overall_width) {
-      node.pos_x = node.ratio_pos_x * this.fixed_overall_width;
-    }
-  }
-
   readjust_horizon_pos_of_subtree(node: CardNode<T>) {
     if (node.level_previous) {
-      let min_pos = node.level_previous.ratio_pos_x + 1;
-      if (min_pos < node.ratio_pos_x) {
+      let min_pos = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
+      if (min_pos < node.pos_x) {
         return;
       }
 
       // todo: only for test, remove it later
       readjust_horizon_pos_count++;
-      let diff = min_pos - node.ratio_pos_x;
+      let diff = min_pos - node.pos_x;
       let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
 
       while (!queue.is_empty()) {
         let node = queue.shift();
-        node!.ratio_pos_x = node!.ratio_pos_x + diff;
+        node!.pos_x = node!.pos_x + diff;
         let children = node!.children;
         for (let i = 0; i < children.length; i++) {
           queue.push(children[i]);

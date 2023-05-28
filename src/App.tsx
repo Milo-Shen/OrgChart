@@ -25,8 +25,8 @@ function App() {
 
     // todo: test it
     let now = performance.now();
-    let data = mock_org_chart_data(20, 2, false);
-    // let data = mock_org_chart_data(~~(Math.random() * 20) + 1, ~~(Math.random() * 5) + 1, true);
+    // let data = mock_org_chart_data(20, 2, false);
+    let data = mock_org_chart_data(~~(Math.random() * 20) + 1, ~~(Math.random() * 5) + 1, true);
     // let data = mock_org_chart_data(3000000, 20, false);
     console.log(`build mock data time: ${performance.now() - now} ms`);
     now = performance.now();
@@ -51,7 +51,6 @@ function App() {
             key={card.id}
             name={card.name}
             parent_id={card.parent?.id}
-            ratio_pos_x={card.ratio_pos_x}
             width={card.width}
             height={card.height}
             pos_x={card.pos_x}
