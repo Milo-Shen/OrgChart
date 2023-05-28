@@ -21,6 +21,9 @@ export enum CardNodeType {
 // Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
 
+// todo: only for test, remove it later
+let readjust_horizon_pos_count = 0;
+
 class CardNode<T> {
   id: string;
   name: string;
@@ -302,6 +305,8 @@ class OrgChart<T> {
         return;
       }
 
+      // todo: only for test, remove it later
+      readjust_horizon_pos_count++;
       let diff = min_pos - node.ratio_pos_x;
       let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
 
@@ -387,6 +392,8 @@ class OrgChart<T> {
 
   get_render_data(): ChartRenderData<T> {
     // return this.card_list;
+    // todo: only for test, remove it later
+    console.log(readjust_horizon_pos_count);
     return {
       card_list: this.card_linked_list,
       line_list: this.line_list,
