@@ -141,6 +141,15 @@ class OrgChart<T> {
     // build the level previous relationship
     this.link_level_prev_card_and_build_card_list();
 
+    // generate the horizon x position and lines
+    this.generate_horizon_pos_and_lines();
+  }
+
+  generate_horizon_pos_and_lines() {
+    if (!this.root) {
+      return;
+    }
+
     // update the horizon space for each node
     this.update_node_horizon_space(this.root);
 
