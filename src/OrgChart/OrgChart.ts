@@ -13,10 +13,10 @@ export type ChartRenderData<T> = {
 };
 
 export enum CardNodeType {
-  NORMAL = "NORMAL",
-  EXTEND = "EXTEND",
-  LITE = "LITE",
-  BATCH = "BATCH",
+  NORMAL = 0,
+  LITE = 1 << 0,
+  BATCH = 1 << 1,
+  EXTEND = 1 << 2,
 }
 
 // Export Constants
