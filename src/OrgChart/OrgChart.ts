@@ -15,6 +15,7 @@ export type ChartRenderData<T> = {
 export enum CardNodeType {
   NORMAL = "NORMAL",
   EXTEND = "EXTEND",
+  LITE = "LITE",
   BATCH = "BATCH",
 }
 
@@ -78,12 +79,13 @@ class OrgChart<T> {
   fixed_size: boolean;
   fixed_width?: number;
   fixed_height?: number;
-  extend_width?: number;
-  extend_height?: number;
+  lite_width?: number;
+  lite_height?: number;
   fixed_overall_width?: number;
   fixed_overall_height?: number;
   horizon_gap: number;
   vertical_gap: number;
+  batch_column_capacity: number;
 
   constructor(
     card_list: Array<any>,
@@ -91,13 +93,14 @@ class OrgChart<T> {
     fixed_size: boolean = true,
     fixed_width?: number,
     fixed_height?: number,
-    extend_width?: number,
-    extend_height?: number,
-    horizon_gap = 10,
-    vertical_gap = 40,
-    line_width = 1,
+    lite_width?: number,
+    lite_height?: number,
+    horizon_gap: number = 10,
+    vertical_gap: number = 40,
+    line_width: number = 1,
     line_color: string = "#6A6D70",
-    line_radius = 0
+    line_radius: number = 0,
+    batch_column_capacity: number = 6
   ) {
     // initialization
     this.card_list = [];
@@ -108,12 +111,13 @@ class OrgChart<T> {
     this.fixed_size = fixed_size;
     this.fixed_width = fixed_width;
     this.fixed_height = fixed_height;
-    this.extend_width = extend_width;
-    this.extend_height = extend_height;
+    this.lite_width = lite_width;
+    this.lite_height = lite_height;
     this.horizon_gap = horizon_gap;
     this.vertical_gap = vertical_gap;
     this.card_linked_list = new DoublyLinkedList();
     this.previous_card = undefined;
+    this.batch_column_capacity = batch_column_capacity;
 
     // process exception
     if (!card_list || !card_list.length) {

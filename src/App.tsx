@@ -30,7 +30,7 @@ function App() {
     // let data = mock_org_chart_data(3000000, 20, false);
     console.log(`build mock data time: ${performance.now() - now} ms`);
     now = performance.now();
-    let chart = new OrgChart<UI5CardInterface>(data, true, 200, 100, 100, 50, 10, 41, 2, "#6A6D70", 12);
+    let chart = new OrgChart<UI5CardInterface>(data, true, 200, 100, 100, 50, 10, 41, 2, "#6A6D70", 12, 2);
     let render_data = chart.get_render_data();
     console.log(`build org chart time: ${performance.now() - now} ms`);
     set_card_list(render_data);
