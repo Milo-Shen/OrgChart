@@ -136,6 +136,8 @@ class OrgChart<T> {
     this.root.pos_y = 0;
 
     this.initialize_fixed_width_height_of_a_node(this.root);
+
+    // initial the card map
     this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
 

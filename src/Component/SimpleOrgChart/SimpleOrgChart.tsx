@@ -5,9 +5,12 @@ import React from "react";
 import SimpleOrgChartStyle from "./SimpleOrgChart.module.css";
 
 function SimpleOrgChart(props: any) {
-  const { name, parent_id, width, height, pos_x, pos_y } = props;
+  const { id, name, parent_id, width, height, pos_x, pos_y, onClick } = props;
   return (
     <div
+      onClick={() => {
+        onClick(id);
+      }}
       style={{
         width: `${width}px`,
         height: `${height}px`,

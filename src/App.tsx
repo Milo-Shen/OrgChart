@@ -48,7 +48,9 @@ function App() {
         data={card_list}
         card_template={(card: CardNode<UI5CardInterface>) => (
           <SimpleOrgChart
+            onClick={(a: any) => console.log(a)}
             key={card.id}
+            id={card.id}
             name={card.name}
             parent_id={card.parent?.id}
             width={card.width}
