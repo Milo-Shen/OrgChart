@@ -88,7 +88,7 @@ class OrgChart<T> {
   batch_column_capacity: number;
 
   constructor(
-    card_list: Array<any>,
+    card_raw_list: Array<any>,
     // todo: typescript enhancement
     fixed_size: boolean = true,
     fixed_width?: number,
@@ -120,7 +120,7 @@ class OrgChart<T> {
     this.batch_column_capacity = batch_column_capacity;
 
     // process exception
-    if (!card_list || !card_list.length) {
+    if (!card_raw_list || !card_raw_list.length) {
       return;
     }
 
@@ -131,7 +131,7 @@ class OrgChart<T> {
     }
 
     // create the root node
-    let root_data = card_list[0];
+    let root_data = card_raw_list[0];
     this.root = new CardNode<T>(root_data.id, root_data.name);
     this.root.pos_y = 0;
 
@@ -142,7 +142,7 @@ class OrgChart<T> {
     this.card_map.set(this.root.id, this.root);
 
     // generate card node from raw data
-    this.initialize_tree_from_raw_data(card_list);
+    this.initialize_tree_from_raw_data(card_raw_list);
 
     // build the level previous relationship
     this.link_level_prev_card_and_build_card_list();
@@ -173,12 +173,12 @@ class OrgChart<T> {
     }
   }
 
-  initialize_tree_from_raw_data(card_list: Array<any>) {
-    let card_list_len = card_list.length;
+  initialize_tree_from_raw_data(card_raw_list: Array<any>) {
+    let card_list_len = card_raw_list.length;
 
     // build card node map
     for (let i = 1; i < card_list_len; i++) {
-      let { id, name } = card_list[i];
+      let { id, name } = card_raw_list[i];
       let new_card = new CardNode<T>(id, name);
 
       // process the fixed size type
@@ -188,7 +188,7 @@ class OrgChart<T> {
 
     // establish relationship between nodes
     for (let i = 0; i < card_list_len; i++) {
-      let { id, children } = card_list[i];
+      let { id, children } = card_raw_list[i];
       let card = this.card_map!.get(id)!;
       let previous_card = undefined;
 
