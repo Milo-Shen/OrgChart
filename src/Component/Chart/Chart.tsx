@@ -32,7 +32,7 @@ function Chart<T>(props: ChartPropsInterface<T>) {
             height={line.height}
             pos_x={line.pos_x}
             pos_y={line.pos_y}
-            type={line.type}
+            mode={line.mode}
             color={line.color}
             border_width={line.border_width}
             border_radius={line.border_radius}

@@ -382,7 +382,7 @@ class OrgChart<T> {
 
   create_line_node(type: LineType, x: number, y: number, w: number, h: number) {
     let line_node = new LineNode();
-    line_node.type = type;
+    line_node.mode = type;
     line_node.color = this.line_color;
     line_node.border_width = this.line_width;
     line_node.border_radius = this.line_radius;

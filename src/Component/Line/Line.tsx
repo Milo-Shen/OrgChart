@@ -16,23 +16,14 @@ export interface LinePropsInterface {
   height: number;
   pos_x: number;
   pos_y: number;
-  type: LineType;
+  mode: LineType;
   color: string;
   border_width: number;
   border_radius: number;
 }
 
 function Line(props: LinePropsInterface) {
-  const {
-    width,
-    height,
-    pos_x,
-    pos_y,
-    type,
-    color,
-    border_width,
-    border_radius,
-  } = props;
+  const { width, height, pos_x, pos_y, mode, color, border_width, border_radius } = props;
 
   let style: any = {
     width: `${width}px`,
@@ -41,7 +32,7 @@ function Line(props: LinePropsInterface) {
     left: `${pos_x}px`,
   };
 
-  if (type === LineType.Line) {
+  if (mode === LineType.Line) {
     style.background = color;
   } else {
     style.borderColor = color;
@@ -52,10 +43,7 @@ function Line(props: LinePropsInterface) {
 
   return (
     <div
-      className={classNames(
-        LineStyle.basic,
-        type === LineType.Line ? LineStyle.line_type : LineStyle.square_type
-      )}
+      className={classNames(LineStyle.basic, mode === LineType.Line ? LineStyle.line_type : LineStyle.square_type)}
       style={style}
     ></div>
   );

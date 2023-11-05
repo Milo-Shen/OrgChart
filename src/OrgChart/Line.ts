@@ -11,14 +11,14 @@ export class LineNode {
   border_width: number;
   border_radius: number;
   color: string;
-  type: LineType;
+  mode: LineType;
 
   constructor(
     x = -Infinity,
     y = Infinity,
     w = 0,
     h = 0,
-    type = LineType.Line,
+    mode = LineType.Line,
     color = "#6A6D70",
     border_width = 0,
     border_radius = 0
@@ -27,7 +27,7 @@ export class LineNode {
     this.pos_y = y;
     this.width = w;
     this.height = h;
-    this.type = type;
+    this.mode = mode;
     this.color = color;
     this.border_width = border_width;
     this.border_radius = border_radius;
