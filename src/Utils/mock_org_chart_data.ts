@@ -36,7 +36,7 @@ export function mock_org_chart_data(count: number = 1, max_child?: number, is_ra
     let children: string[] = [];
     let children_count = Math.min(max_child, remain_count);
     if (is_range) {
-      children_count = range(Math.min(max_child, remain_count));
+      children_count = range(children_count);
     }
 
     for (let i = 0; i < children_count; i++) {
