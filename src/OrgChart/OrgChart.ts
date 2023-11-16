@@ -301,6 +301,7 @@ class OrgChart<T> {
     }
   }
 
+  // todo: enhance the performance here
   readjust_horizon_pos_of_subtree(node: CardNode<T>) {
     if (node.level_previous) {
       let min_pos = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
