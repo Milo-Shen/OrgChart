@@ -24,6 +24,7 @@ export const chartRenderDefaultData = { card_list: [], line_list: [] };
 
 // todo: only for test, remove it later
 let readjust_horizon_pos_count = 0;
+let readjust_horizon_pos_count_v1 = 0;
 
 class CardNode<T> {
   id: string;
@@ -311,10 +312,12 @@ class OrgChart<T> {
 
       // todo: only for test, remove it later
       readjust_horizon_pos_count++;
+
       let diff = min_pos - node.pos_x;
       let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
 
       while (!queue.is_empty()) {
+        readjust_horizon_pos_count_v1++;
         let node = queue.shift();
         node!.pos_x = node!.pos_x + diff;
         let children = node!.children;
@@ -398,6 +401,7 @@ class OrgChart<T> {
     // return this.card_list;
     // todo: only for test, remove it later
     console.log(readjust_horizon_pos_count);
+    console.log(readjust_horizon_pos_count_v1);
     return {
       card_list: this.card_linked_list,
       line_list: this.line_list,
