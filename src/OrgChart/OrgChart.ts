@@ -304,26 +304,28 @@ class OrgChart<T> {
 
   // todo: enhance the performance here
   readjust_horizon_pos_of_subtree(node: CardNode<T>) {
-    if (node.level_previous) {
-      let min_pos = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
-      if (min_pos < node.pos_x) {
-        return;
-      }
+    if (!node.level_previous) {
+      return;
+    }
 
-      // todo: only for test, remove it later
-      readjust_horizon_pos_count++;
+    let min_pos = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
+    if (min_pos < node.pos_x) {
+      return;
+    }
 
-      let diff = min_pos - node.pos_x;
-      let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
+    // todo: only for test, remove it later
+    readjust_horizon_pos_count++;
 
-      while (!queue.is_empty()) {
-        readjust_horizon_pos_count_v1++;
-        let node = queue.shift();
-        node!.pos_x = node!.pos_x + diff;
-        let children = node!.children;
-        for (let i = 0; i < children.length; i++) {
-          queue.push(children[i]);
-        }
+    let diff = min_pos - node.pos_x;
+    let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
+
+    while (!queue.is_empty()) {
+      readjust_horizon_pos_count_v1++;
+      let node = queue.shift();
+      node!.pos_x = node!.pos_x + diff;
+      let children = node!.children;
+      for (let i = 0; i < children.length; i++) {
+        queue.push(children[i]);
       }
     }
   }
