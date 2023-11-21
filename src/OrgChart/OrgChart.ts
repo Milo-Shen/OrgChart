@@ -262,7 +262,7 @@ class OrgChart<T> {
   update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
     // most left node of each subtree
     if (is_leaf(node) && node.previous === undefined) {
-      if (node.level_previous?.pos_x) {
+      if (node.level_previous?.pos_x !== undefined) {
         node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
       } else {
         node.pos_x = 0;
