@@ -82,8 +82,6 @@ class OrgChart<T> {
   fixed_height?: number;
   lite_width?: number;
   lite_height?: number;
-  fixed_overall_width?: number;
-  fixed_overall_height?: number;
   horizon_gap: number;
   vertical_gap: number;
   batch_column_capacity: number;
@@ -123,12 +121,6 @@ class OrgChart<T> {
     // process exception
     if (!card_raw_list || !card_raw_list.length) {
       return;
-    }
-
-    // process the fixed size type
-    if (fixed_size && fixed_width && fixed_height) {
-      this.fixed_overall_width = fixed_width + horizon_gap;
-      this.fixed_overall_height = fixed_height + vertical_gap;
     }
 
     // create the root node
