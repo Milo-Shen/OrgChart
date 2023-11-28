@@ -176,6 +176,11 @@ class OrgChart<T> {
 
       // process the fixed size type
       this.initialize_fixed_width_height_of_a_node(new_card);
+
+      // todo: for testing
+      new_card.width = 250;
+      new_card.height = 100;
+
       this.card_map!.set(id, new_card);
     }
 
@@ -240,6 +245,9 @@ class OrgChart<T> {
     this.previous_card = undefined;
 
     traverse_tree_by_dfs(root, (node) => {
+      // todo: iterator the node id
+      console.log(node.id);
+
       // most left node of each subtree
       this.update_node_horizon_space_most_left_leaf(node);
 
@@ -280,11 +288,14 @@ class OrgChart<T> {
       if (node.children.length === 1) {
         // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
         // if the parent only has one child, the pos_x of the parent node will as same as the child
-        node.pos_x = this.previous_card.pos_x;
+        let diff = (node.children[0].width - node.width) / 2;
+        node.pos_x = this.previous_card.pos_x + diff;
         // odd number case
       } else if (!is_even(node.children.length)) {
         let mid_pos = ~~(node.children.length / 2);
-        node.pos_x = node.children[mid_pos].pos_x;
+        let mid_node = node.children[mid_pos];
+        let diff = (mid_node.width - node.width) / 2;
+        node.pos_x = mid_node.pos_x + diff;
       } else {
         let start = node.children[0].pos_x;
         let end = node.children[node.children.length - 1].pos_x;
