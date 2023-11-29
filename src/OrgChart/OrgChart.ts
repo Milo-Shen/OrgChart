@@ -4,7 +4,6 @@ import { LineNode, LineType } from "./Line";
 // Import Utils
 import { is_even, is_leaf, traverse_tree_by_dfs, traverse_tree_by_level } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
-import { start } from "repl";
 
 // Export Classes, Interfaces, Type
 export type ChartRenderData<T> = {
@@ -18,6 +17,11 @@ export enum CardNodeType {
   LITE = 1 << 0,
   BATCH = 1 << 1,
   EXTEND = 1 << 2,
+}
+
+export enum OrgChartDirection {
+  Horizontal = "Horizontal",
+  vertical = "vertical",
 }
 
 // Export Constants
@@ -86,8 +90,10 @@ class OrgChart<T> {
   horizon_gap: number;
   vertical_gap: number;
   batch_column_capacity: number;
+  direction: OrgChartDirection;
 
   constructor(
+    direction: OrgChartDirection = OrgChartDirection.Horizontal,
     card_raw_list: Array<any>,
     // todo: typescript enhancement
     fixed_size: boolean = true,
@@ -118,6 +124,7 @@ class OrgChart<T> {
     this.card_linked_list = new DoublyLinkedList();
     this.previous_card = undefined;
     this.batch_column_capacity = batch_column_capacity;
+    this.direction = direction;
 
     // process exception
     if (!card_raw_list || !card_raw_list.length) {
