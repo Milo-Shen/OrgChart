@@ -4,6 +4,7 @@ import { LineNode, LineType } from "./Line";
 // Import Utils
 import { is_even, is_leaf, traverse_tree_by_dfs, traverse_tree_by_level } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
+import { start } from "repl";
 
 // Export Classes, Interfaces, Type
 export type ChartRenderData<T> = {
@@ -297,9 +298,9 @@ class OrgChart<T> {
         let diff = (mid_node.width - node.width) / 2;
         node.pos_x = mid_node.pos_x + diff;
       } else {
-        let start = node.children[0].pos_x;
-        let end = node.children[node.children.length - 1].pos_x;
-        node.pos_x = (start + end) / 2;
+        let first_node = node.children[0];
+        let last_node = node.children[node.children.length - 1];
+        node.pos_x = (first_node.pos_x + last_node.pos_x - node.width) / 2 + (first_node.width + last_node.width) / 4;
       }
 
       this.readjust_horizon_pos_of_subtree(node);

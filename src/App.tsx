@@ -25,7 +25,7 @@ function App() {
 
     // todo: test it
     let now = performance.now();
-    let data = mock_org_chart_data(8, 1, false);
+    let data = mock_org_chart_data(8, 2, false);
     // let data_new = mock_org_chart_data(~~(Math.random() * 30) + 1, ~~(Math.random() * 5) + 1, true);
     // let data = mock_org_chart_data(300000, 20, false);
     console.log(`build mock data time: ${performance.now() - now} ms`);
