@@ -93,7 +93,7 @@ class OrgChart<T> {
   direction: OrgChartDirection;
 
   constructor(
-    direction: OrgChartDirection = OrgChartDirection.Horizontal,
+    direction: OrgChartDirection = OrgChartDirection.vertical,
     card_raw_list: Array<any>,
     // todo: typescript enhancement
     fixed_size: boolean = true,
