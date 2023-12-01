@@ -45,6 +45,7 @@ class CardNode<T> {
   height: number;
   pos_x: number;
   pos_y: number;
+  most_right_pos_x: number;
   mode: CardNodeType;
 
   constructor(
@@ -67,6 +68,7 @@ class CardNode<T> {
     this.height = h;
     this.pos_x = -Infinity;
     this.pos_y = 0;
+    this.most_right_pos_x = -Infinity;
     this.content = content;
     this.mode = mode;
   }
@@ -253,6 +255,7 @@ class OrgChart<T> {
     this.previous_card = undefined;
 
     traverse_tree_by_dfs(root, (node) => {
+      console.log(`node.id: ${node.id}`);
       // most left node of each subtree
       this.update_node_horizon_space_most_left_leaf(node);
 
