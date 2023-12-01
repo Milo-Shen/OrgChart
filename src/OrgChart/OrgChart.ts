@@ -186,8 +186,8 @@ class OrgChart<T> {
       this.initialize_fixed_width_height_of_a_node(new_card);
 
       // todo: for testing
-      new_card.width = 250;
-      new_card.height = 100;
+      new_card.width = ~~(Math.random() * 200) + 50;
+      new_card.height = ~~(Math.random() * 200) + 50;
 
       this.card_map!.set(id, new_card);
     }
