@@ -21,7 +21,7 @@ export enum CardNodeType {
 
 export enum OrgChartDirection {
   Horizontal = "Horizontal",
-  vertical = "vertical",
+  Vertical = "Vertical",
 }
 
 // Export Constants
@@ -93,7 +93,7 @@ class OrgChart<T> {
   direction: OrgChartDirection;
 
   constructor(
-    direction: OrgChartDirection = OrgChartDirection.vertical,
+    direction: OrgChartDirection = OrgChartDirection.Vertical,
     card_raw_list: Array<any>,
     // todo: typescript enhancement
     fixed_size: boolean = true,
@@ -253,9 +253,6 @@ class OrgChart<T> {
     this.previous_card = undefined;
 
     traverse_tree_by_dfs(root, (node) => {
-      // todo: iterator the node id
-      console.log(node.id);
-
       // most left node of each subtree
       this.update_node_horizon_space_most_left_leaf(node);
 
