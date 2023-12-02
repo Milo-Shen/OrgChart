@@ -2,7 +2,13 @@
 import { LineNode, LineType } from "./Line";
 
 // Import Utils
-import { is_even, is_leaf, traverse_tree_by_dfs, traverse_tree_by_level } from "./utils";
+import {
+  is_even,
+  is_leaf,
+  traverse_tree_by_dfs,
+  traverse_tree_by_level,
+  is_most_left_leaf_of_a_sub_tree,
+} from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
 // Export Classes, Interfaces, Type
@@ -266,9 +272,11 @@ class OrgChart<T> {
 
   update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
     // most left node of each subtree
-    if (!is_leaf(node) || node.previous !== undefined) {
+    if (!is_most_left_leaf_of_a_sub_tree(node)) {
       return;
     }
+
+    console.log(`most_left_leaf: ${node.id}`);
 
     if (node.level_previous?.pos_x !== undefined) {
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
