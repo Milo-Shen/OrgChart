@@ -11,7 +11,6 @@ import SimpleOrgChart from "./Component/SimpleOrgChart";
 
 // Import Utils
 import { CardNode, OrgChart, chartRenderDefaultData } from "./OrgChart/OrgChart";
-import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
 
 function App() {
   let is_fetch = useRef(false);
