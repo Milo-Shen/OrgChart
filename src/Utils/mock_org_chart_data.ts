@@ -6,6 +6,8 @@ export interface MockCard {
   id: string;
   name: string;
   children: string[];
+  width?: number;
+  height?: number;
 }
 
 function build_card(): MockCard {
@@ -14,6 +16,8 @@ function build_card(): MockCard {
     id: id,
     name: id,
     children: [],
+    width: ~~(Math.random() * 200) + 50,
+    height: ~~(Math.random() * 200) + 50,
   };
 }
 

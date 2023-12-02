@@ -51,10 +51,10 @@ class CardNode<T> {
   constructor(
     id: string,
     name: string,
-    content: T = undefined as T,
     w: number = 0,
     h: number = 0,
-    mode: CardNodeType = CardNodeType.NORMAL
+    mode: CardNodeType = CardNodeType.NORMAL,
+    content: T = undefined as T
   ) {
     this.id = id;
     this.name = name;
@@ -135,7 +135,8 @@ class OrgChart<T> {
 
     // create the root node
     let root_data = card_raw_list[0];
-    this.root = new CardNode<T>(root_data.id, root_data.name);
+    let { id, name, width, height } = root_data;
+    this.root = new CardNode<T>(id, name, width, height);
     this.root.pos_y = 0;
 
     this.initialize_fixed_width_height_of_a_node(this.root);
@@ -181,15 +182,11 @@ class OrgChart<T> {
 
     // build card node map
     for (let i = 1; i < card_list_len; i++) {
-      let { id, name } = card_raw_list[i];
-      let new_card = new CardNode<T>(id, name);
+      let { id, name, width, height } = card_raw_list[i];
+      let new_card = new CardNode<T>(id, name, width, height);
 
       // process the fixed size type
       this.initialize_fixed_width_height_of_a_node(new_card);
-
-      // todo: for testing
-      new_card.width = ~~(Math.random() * 200) + 50;
-      new_card.height = ~~(Math.random() * 200) + 50;
 
       this.card_map!.set(id, new_card);
     }
