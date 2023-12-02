@@ -13,7 +13,7 @@ export function is_leaf<T>(node: CardNode<T>) {
 }
 
 export function is_most_left_leaf_of_a_sub_tree<T>(node: CardNode<T>) {
-  return is_leaf(node) && node.previous === undefined;
+  return node && is_leaf(node) && node.previous === undefined;
 }
 
 export function traverse_tree_by_level<T>(node: CardNode<T>, callback: (node: CardNode<T>) => void) {
