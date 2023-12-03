@@ -285,6 +285,7 @@ class OrgChart<T> {
     });
   }
 
+  // todo: we can enhance the performance here
   readjust_by_the_most_right_pos_x_of_a_subtree(left_node: CardNode<T> | undefined, root: CardNode<T>) {
     if (!left_node) {
       return;
