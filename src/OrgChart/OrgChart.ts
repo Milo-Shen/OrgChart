@@ -10,7 +10,6 @@ import {
   is_most_left_leaf_of_a_sub_tree,
 } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
-import { d } from "@pmmmwh/react-refresh-webpack-plugin/types/options";
 
 // Export Classes, Interfaces, Type
 export type ChartRenderData<T> = {
@@ -38,10 +37,6 @@ export enum OrgChartMode {
 
 // Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
-
-// todo: only for test, remove it later
-let readjust_horizon_pos_count = 0;
-let readjust_horizon_pos_count_v1 = 0;
 
 class CardNode<T> {
   id: string;
@@ -180,8 +175,6 @@ class OrgChart<T> {
     // update the horizon space for each node
     this.update_node_horizon_space(this.root);
 
-    // todo: update the vertical space for each node ( not necessary ? )
-
     // calculate the line pos
     this.calculate_line_pos(this.root);
   }
@@ -282,6 +275,18 @@ class OrgChart<T> {
     });
   }
 
+  readjust_by_negative_pos_x(root: CardNode<T>) {
+    if (root.pos_x >= 0) {
+      return;
+    }
+
+    let diff = Math.abs(root.pos_x);
+
+    traverse_tree_by_level(root, (node) => {
+      node.pos_x += diff;
+    });
+  }
+
   readjust_by_the_most_right_pos_x_of_a_subtree(left_node: CardNode<T> | undefined, root: CardNode<T>) {
     if (!left_node) {
       return;
@@ -320,8 +325,6 @@ class OrgChart<T> {
     console.log(`most_left_leaf: ${node.id}`);
 
     if (node.level_previous?.pos_x !== undefined) {
-      // todo: the below code can be ignored
-      // todo: because we already have "readjust by the_most right pos x of a subtree: function
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
     } else {
       node.pos_x = 0;
@@ -368,40 +371,16 @@ class OrgChart<T> {
       node.pos_x = (first_node.pos_x + last_node.pos_x - node.width) / 2 + (first_node.width + last_node.width) / 4;
     }
 
-    // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
-    this.readjust_horizon_pos_of_subtree(node);
+    let iterator = node;
+    while (iterator !== this.root && iterator.previous === undefined) {
+      iterator = iterator.parent!;
+    }
 
-    this.readjust_by_the_most_right_pos_x_of_a_subtree(node.previous, node);
+    this.readjust_by_the_most_right_pos_x_of_a_subtree(iterator.previous, node);
+
+    this.readjust_by_negative_pos_x(node);
 
     this.previous_card = node;
-  }
-
-  // todo: whether the readjust_horizon_pos_of_subtree is necessary now ?
-  readjust_horizon_pos_of_subtree(node: CardNode<T>) {
-    if (!node.level_previous) {
-      return;
-    }
-
-    let min_pos = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
-    if (min_pos < node.pos_x) {
-      return;
-    }
-
-    // todo: only for test, remove it later
-    readjust_horizon_pos_count++;
-
-    let diff = min_pos - node.pos_x;
-    let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
-
-    while (!queue.is_empty()) {
-      readjust_horizon_pos_count_v1++;
-      let node = queue.shift();
-      node!.pos_x = node!.pos_x + diff;
-      let children = node!.children;
-      for (let i = 0; i < children.length; i++) {
-        queue.push(children[i]);
-      }
-    }
   }
 
   calculate_line_pos(root: CardNode<T>) {
@@ -475,9 +454,6 @@ class OrgChart<T> {
 
   get_render_data(): ChartRenderData<T> {
     // return this.card_list;
-    // todo: only for test, remove it later
-    console.log(readjust_horizon_pos_count);
-    console.log(readjust_horizon_pos_count_v1);
     return {
       card_list: this.card_linked_list,
       line_list: this.line_list,
