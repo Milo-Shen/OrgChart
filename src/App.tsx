@@ -2,15 +2,21 @@
 import React, { useEffect, useRef, useState } from "react";
 
 // Import Types & Interfaces
-import { ChartRenderData, OrgChartDirection } from "./OrgChart/OrgChart";
+// Import Utils
+import {
+  CardNode,
+  ChartRenderData,
+  chartRenderDefaultData,
+  OrgChart,
+  OrgChartDirection,
+  OrgChartMode,
+} from "./OrgChart/OrgChart";
 import { UI5CardInterface } from "./Component/UI5Card/UI5Card";
 
 // Import Customized Component
 import Chart from "./Component/Chart/Chart";
 import SimpleOrgChart from "./Component/SimpleOrgChart";
 
-// Import Utils
-import { CardNode, OrgChart, chartRenderDefaultData } from "./OrgChart/OrgChart";
 // import { mock_org_chart_data } from "./Utils/mock_org_chart_data";
 
 function App() {
@@ -42,12 +48,12 @@ function App() {
     ];
     // console.log(JSON.stringify(data));
     // let data = mock_org_chart_data(~~(Math.random() * 30) + 1, ~~(Math.random() * 5) + 1, true);
-    console.log(JSON.stringify(data));
     // let data = mock_org_chart_data(300000, 20, false);
     console.log(`build mock data time: ${performance.now() - now} ms`);
     now = performance.now();
     let chart = new OrgChart<UI5CardInterface>(
       OrgChartDirection.Horizontal,
+      OrgChartMode.Flexible,
       data,
       false,
       200,

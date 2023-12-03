@@ -30,6 +30,11 @@ export enum OrgChartDirection {
   Vertical = "Vertical",
 }
 
+export enum OrgChartMode {
+  "OrgChart" = "OrgChart",
+  "Flexible" = "Flexible",
+}
+
 // Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
 
@@ -99,10 +104,12 @@ class OrgChart<T> {
   horizon_gap: number;
   vertical_gap: number;
   batch_column_capacity: number;
-  direction: OrgChartDirection;
+  direction?: OrgChartDirection;
+  mode?: OrgChartMode;
 
   constructor(
     direction: OrgChartDirection = OrgChartDirection.Vertical,
+    mode: OrgChartMode = OrgChartMode.Flexible,
     card_raw_list: Array<any>,
     // todo: typescript enhancement
     fixed_size: boolean = true,
@@ -136,6 +143,7 @@ class OrgChart<T> {
     this.previous_card = undefined;
     this.batch_column_capacity = batch_column_capacity;
     this.direction = direction;
+    this.mode = mode;
 
     // process exception
     if (!card_raw_list || !card_raw_list.length) {
@@ -292,7 +300,7 @@ class OrgChart<T> {
     });
 
     this.most_right_map.set(this.previous_card.id, most_right_pos);
-    console.log(root.pos_x, most_right_pos, root.pos_x > most_right_pos);
+
     root.pos_x = most_right_pos;
   }
 
@@ -326,27 +334,29 @@ class OrgChart<T> {
   }
 
   update_node_horizon_space_parent_node(node: CardNode<T>) {
-    if (this.previous_card?.parent === node) {
-      if (node.children.length === 1) {
-        // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
-        // if the parent only has one child, the pos_x of the parent node will as same as the child
-        let diff = (node.children[0].width - node.width) / 2;
-        node.pos_x = this.previous_card.pos_x + diff;
-        // odd number case
-      } else if (!is_even(node.children.length)) {
-        let mid_pos = ~~(node.children.length / 2);
-        let mid_node = node.children[mid_pos];
-        let diff = (mid_node.width - node.width) / 2;
-        node.pos_x = mid_node.pos_x + diff;
-      } else {
-        let first_node = node.children[0];
-        let last_node = node.children[node.children.length - 1];
-        node.pos_x = (first_node.pos_x + last_node.pos_x - node.width) / 2 + (first_node.width + last_node.width) / 4;
-      }
-
-      this.readjust_horizon_pos_of_subtree(node);
-      this.previous_card = node;
+    if (this.previous_card?.parent !== node) {
+      return;
     }
+
+    if (node.children.length === 1) {
+      // if the parent only has one child, the pos_x of the parent node will as same as the child
+      let diff = (node.children[0].width - node.width) / 2;
+      node.pos_x = this.previous_card.pos_x + diff;
+      // odd number case
+    } else if (!is_even(node.children.length)) {
+      let mid_pos = ~~(node.children.length / 2);
+      let mid_node = node.children[mid_pos];
+      let diff = (mid_node.width - node.width) / 2;
+      node.pos_x = mid_node.pos_x + diff;
+    } else {
+      let first_node = node.children[0];
+      let last_node = node.children[node.children.length - 1];
+      node.pos_x = (first_node.pos_x + last_node.pos_x - node.width) / 2 + (first_node.width + last_node.width) / 4;
+    }
+
+    // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
+    this.readjust_horizon_pos_of_subtree(node);
+    this.previous_card = node;
   }
 
   // todo: enhance the performance here
