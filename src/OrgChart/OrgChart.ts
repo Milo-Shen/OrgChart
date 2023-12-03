@@ -292,6 +292,7 @@ class OrgChart<T> {
     });
 
     this.most_right_map.set(this.previous_card.id, most_right_pos);
+    console.log(root.pos_x, most_right_pos, root.pos_x > most_right_pos);
     root.pos_x = most_right_pos;
   }
 
@@ -304,6 +305,8 @@ class OrgChart<T> {
     console.log(`most_left_leaf: ${node.id}`);
 
     if (node.level_previous?.pos_x !== undefined) {
+      // todo: the below code can be ignored
+      // todo: because we already have readjust_by_the_most_right_pos_x_of_a_sub_tree
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
     } else {
       node.pos_x = 0;
