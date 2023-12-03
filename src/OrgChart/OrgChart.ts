@@ -10,6 +10,7 @@ import {
   is_most_left_leaf_of_a_sub_tree,
 } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
+import { d } from "@pmmmwh/react-refresh-webpack-plugin/types/options";
 
 // Export Classes, Interfaces, Type
 export type ChartRenderData<T> = {
@@ -74,12 +75,12 @@ class CardNode<T> {
     this.previous = undefined;
     this.level_previous = undefined;
     this.level_first = undefined;
-    this.level = -Infinity;
+    this.level = 0;
     this.width = w;
     this.height = h;
-    this.pos_x = -Infinity;
+    this.pos_x = 0;
     this.pos_y = 0;
-    this.most_right_pos_x = -Infinity;
+    this.most_right_pos_x = 0;
     this.content = content;
     this.mode = mode;
   }
@@ -303,7 +304,11 @@ class OrgChart<T> {
       return;
     }
 
-    root.pos_x = most_right_pos;
+    let diff = most_right_pos - root.pos_x;
+
+    traverse_tree_by_level(root, (node) => {
+      node.pos_x = node.pos_x + diff;
+    });
   }
 
   update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
