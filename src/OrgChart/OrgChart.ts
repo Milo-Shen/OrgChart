@@ -269,6 +269,7 @@ class OrgChart<T> {
 
     traverse_tree_by_dfs(root, (node) => {
       console.log(`node.id: ${node.id}`);
+
       // most left node of each subtree
       this.update_node_horizon_space_most_left_leaf(node);
 
@@ -280,17 +281,17 @@ class OrgChart<T> {
     });
   }
 
-  readjust_by_the_most_right_pos_x_of_a_sub_tree(left_node: CardNode<T> | undefined, root: CardNode<T>) {
+  readjust_by_the_most_right_pos_x_of_a_subtree(left_node: CardNode<T> | undefined, root: CardNode<T>) {
     if (!left_node) {
       return;
     }
 
-    let cached_most_right_pos = this.most_right_map.get(left_node.id);
-    if (cached_most_right_pos !== undefined) {
-      return cached_most_right_pos;
-    }
-
     let most_right_pos = -Infinity;
+    let cached_most_right_pos = this.most_right_map.get(left_node.id);
+
+    if (cached_most_right_pos !== undefined) {
+      most_right_pos = cached_most_right_pos;
+    }
 
     traverse_tree_by_level(left_node, (node) => {
       let new_pos = node.pos_x + node.width + this.horizon_gap;
@@ -300,6 +301,10 @@ class OrgChart<T> {
     });
 
     this.most_right_map.set(left_node.id, most_right_pos);
+
+    if (root.pos_x > most_right_pos) {
+      return;
+    }
 
     root.pos_x = most_right_pos;
   }
@@ -314,13 +319,13 @@ class OrgChart<T> {
 
     if (node.level_previous?.pos_x !== undefined) {
       // todo: the below code can be ignored
-      // todo: because we already have readjust_by_the_most_right_pos_x_of_a_sub_tree
+      // todo: because we already have "readjust by the_most right pos x of a subtree: function
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
     } else {
       node.pos_x = 0;
     }
 
-    this.readjust_by_the_most_right_pos_x_of_a_sub_tree(this.previous_card, node);
+    this.readjust_by_the_most_right_pos_x_of_a_subtree(this.previous_card, node);
 
     this.previous_card = node;
   }
@@ -333,7 +338,7 @@ class OrgChart<T> {
 
     console.log(`sibling_nodes: ${node.id}`);
 
-    this.readjust_by_the_most_right_pos_x_of_a_sub_tree(node.level_previous, node);
+    this.readjust_by_the_most_right_pos_x_of_a_subtree(node.level_previous, node);
 
     this.previous_card = node;
   }
@@ -363,6 +368,9 @@ class OrgChart<T> {
 
     // todo: performance optimization -> readjust_horizon_pos_of_subtree ?
     this.readjust_horizon_pos_of_subtree(node);
+
+    this.readjust_by_the_most_right_pos_x_of_a_subtree(node.previous, node);
+
     this.previous_card = node;
   }
 
