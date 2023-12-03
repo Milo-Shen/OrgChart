@@ -40,11 +40,12 @@ function App() {
       { id: "id=5", name: "id=5", children: ["id=10", "id=11", "id=12"], width: 149, height: 68 },
       { id: "id=6", name: "id=6", children: [], width: 66, height: 216 },
       { id: "id=7", name: "id=7", children: [], width: 239, height: 119 },
-      { id: "id=8", name: "id=8", children: [], width: 187, height: 77 },
+      { id: "id=8", name: "id=8", children: ["id=13"], width: 187, height: 77 },
       { id: "id=9", name: "id=9", children: [], width: 68, height: 158 },
       { id: "id=10", name: "id=10", children: [], width: 54, height: 127 },
       { id: "id=11", name: "id=11", children: [], width: 109, height: 220 },
       { id: "id=12", name: "id=12", children: [], width: 109, height: 147 },
+      { id: "id=13", name: "id=13", children: [], width: 109, height: 147 },
     ];
     // console.log(JSON.stringify(data));
     // let data = mock_org_chart_data(~~(Math.random() * 30) + 1, ~~(Math.random() * 5) + 1, true);

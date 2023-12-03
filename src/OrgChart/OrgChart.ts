@@ -179,7 +179,7 @@ class OrgChart<T> {
     // update the horizon space for each node
     this.update_node_horizon_space(this.root);
 
-    // todo: update the vertical space for each node
+    // todo: update the vertical space for each node ( not necessary ? )
 
     // calculate the line pos
     this.calculate_line_pos(this.root);
@@ -280,26 +280,26 @@ class OrgChart<T> {
     });
   }
 
-  readjust_by_the_most_right_pos_x_of_a_sub_tree(root: CardNode<T>) {
-    if (!this.previous_card) {
+  readjust_by_the_most_right_pos_x_of_a_sub_tree(left_node: CardNode<T> | undefined, root: CardNode<T>) {
+    if (!left_node) {
       return;
     }
 
-    let cached_most_right_pos = this.most_right_map.get(this.previous_card.id);
+    let cached_most_right_pos = this.most_right_map.get(left_node.id);
     if (cached_most_right_pos !== undefined) {
       return cached_most_right_pos;
     }
 
     let most_right_pos = -Infinity;
 
-    traverse_tree_by_level(this.previous_card, (node) => {
+    traverse_tree_by_level(left_node, (node) => {
       let new_pos = node.pos_x + node.width + this.horizon_gap;
       if (most_right_pos < new_pos) {
         most_right_pos = new_pos;
       }
     });
 
-    this.most_right_map.set(this.previous_card.id, most_right_pos);
+    this.most_right_map.set(left_node.id, most_right_pos);
 
     root.pos_x = most_right_pos;
   }
@@ -320,23 +320,30 @@ class OrgChart<T> {
       node.pos_x = 0;
     }
 
-    this.readjust_by_the_most_right_pos_x_of_a_sub_tree(node);
+    this.readjust_by_the_most_right_pos_x_of_a_sub_tree(this.previous_card, node);
 
     this.previous_card = node;
   }
 
   update_node_horizon_space_sibling_nodes(node: CardNode<T>) {
     // sibling node
-    if (node.previous === this.previous_card) {
-      node.pos_x = node.previous!.pos_x + node.previous!.width + this.horizon_gap;
-      this.previous_card = node;
+    if (node.previous !== this.previous_card) {
+      return;
     }
+
+    console.log(`sibling_nodes: ${node.id}`);
+
+    this.readjust_by_the_most_right_pos_x_of_a_sub_tree(node.level_previous, node);
+
+    this.previous_card = node;
   }
 
   update_node_horizon_space_parent_node(node: CardNode<T>) {
     if (this.previous_card?.parent !== node) {
       return;
     }
+
+    console.log(`parent node: ${node.id}`);
 
     if (node.children.length === 1) {
       // if the parent only has one child, the pos_x of the parent node will as same as the child
@@ -359,7 +366,7 @@ class OrgChart<T> {
     this.previous_card = node;
   }
 
-  // todo: enhance the performance here
+  // todo: whether the readjust_horizon_pos_of_subtree is necessary now ?
   readjust_horizon_pos_of_subtree(node: CardNode<T>) {
     if (!node.level_previous) {
       return;
