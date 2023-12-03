@@ -286,19 +286,16 @@ class OrgChart<T> {
       return;
     }
 
-    let most_right_pos = -Infinity;
-    let cached_most_right_pos = this.most_right_map.get(left_node.id);
+    let most_right_pos = this.most_right_map.get(left_node.id) || -Infinity;
 
-    if (cached_most_right_pos !== undefined) {
-      most_right_pos = cached_most_right_pos;
+    if (most_right_pos === -Infinity) {
+      traverse_tree_by_level(left_node, (node) => {
+        let new_pos = node.pos_x + node.width + this.horizon_gap;
+        if (most_right_pos < new_pos) {
+          most_right_pos = new_pos;
+        }
+      });
     }
-
-    traverse_tree_by_level(left_node, (node) => {
-      let new_pos = node.pos_x + node.width + this.horizon_gap;
-      if (most_right_pos < new_pos) {
-        most_right_pos = new_pos;
-      }
-    });
 
     this.most_right_map.set(left_node.id, most_right_pos);
 
