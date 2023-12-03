@@ -105,7 +105,6 @@ class OrgChart<T> {
 
   constructor(
     direction: OrgChartDirection = OrgChartDirection.Vertical,
-    mode: OrgChartMode = OrgChartMode.Flexible,
     card_raw_list: Array<any>,
     // todo: typescript enhancement
     fixed_size: boolean = true,
@@ -118,7 +117,8 @@ class OrgChart<T> {
     line_width: number = 1,
     line_color: string = "#6A6D70",
     line_radius: number = 0,
-    batch_column_capacity: number = 6
+    batch_column_capacity: number = 6,
+    mode: OrgChartMode = OrgChartMode.Flexible
   ) {
     // initialization
     this.card_list = [];
@@ -262,8 +262,6 @@ class OrgChart<T> {
     this.previous_card = undefined;
 
     traverse_tree_by_dfs(root, (node) => {
-      console.log(`node.id: ${node.id}`);
-
       // most left node of each subtree
       this.update_node_horizon_space_most_left_leaf(node);
 
@@ -322,8 +320,6 @@ class OrgChart<T> {
       return;
     }
 
-    console.log(`most_left_leaf: ${node.id}`);
-
     if (node.level_previous?.pos_x !== undefined) {
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
     } else {
@@ -341,8 +337,6 @@ class OrgChart<T> {
       return;
     }
 
-    console.log(`sibling_nodes: ${node.id}`);
-
     this.readjust_by_the_most_right_pos_x_of_a_subtree(node.level_previous, node);
 
     this.previous_card = node;
@@ -352,8 +346,6 @@ class OrgChart<T> {
     if (this.previous_card?.parent !== node) {
       return;
     }
-
-    console.log(`parent node: ${node.id}`);
 
     if (node.children.length === 1) {
       // if the parent only has one child, the pos_x of the parent node will as same as the child

@@ -16,8 +16,8 @@ function build_card(): MockCard {
     id: id,
     name: id,
     children: [],
-    width: ~~(Math.random() * 200) + 50,
-    height: ~~(Math.random() * 200) + 50,
+    width: range(50, 200),
+    height: range(50, 200),
   };
 }
 
@@ -40,7 +40,7 @@ export function mock_org_chart_data(count: number = 1, max_child?: number, is_ra
     let children: string[] = [];
     let children_count = Math.min(max_child, remain_count);
     if (is_range) {
-      children_count = range(children_count);
+      children_count = range(0, children_count);
     }
 
     for (let i = 0; i < children_count; i++) {
