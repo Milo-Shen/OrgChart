@@ -38,7 +38,8 @@ function App() {
     ];
     // console.log(JSON.stringify(data));
     // let data_new = mock_org_chart_data(~~(Math.random() * 30) + 1, ~~(Math.random() * 5) + 1, true);
-    // console.log(JSON.stringify(data_new));
+    // console.log
+    // (JSON.stringify(data_new));
     // let data = mock_org_chart_data(300000, 20, false);
     console.log(`build mock data time: ${performance.now() - now} ms`);
     now = performance.now();

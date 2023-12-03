@@ -270,7 +270,19 @@ class OrgChart<T> {
     });
   }
 
-  find_the_most_right_start_x_of_a_sub_tree() {}
+  readjust_by_the_most_right_pos_x_of_a_sub_tree(node: CardNode<T>) {
+    if (!this.previous_card) {
+      return;
+    }
+
+    let most_right_node = this.previous_card;
+
+    while (most_right_node.children.length !== 0) {
+      most_right_node = most_right_node.children[most_right_node.children.length - 1];
+    }
+
+    node.pos_x = most_right_node.pos_x + most_right_node.width + this.horizon_gap;
+  }
 
   update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
     // most left node of each subtree
@@ -286,15 +298,7 @@ class OrgChart<T> {
       node.pos_x = 0;
     }
 
-    if (this.previous_card) {
-      let most_right_node = this.previous_card;
-
-      while (most_right_node.children.length !== 0) {
-        most_right_node = most_right_node.children[most_right_node.children.length - 1];
-      }
-
-      node.pos_x = most_right_node.pos_x + most_right_node.width + this.horizon_gap;
-    }
+    this.readjust_by_the_most_right_pos_x_of_a_sub_tree(node);
 
     this.previous_card = node;
   }
