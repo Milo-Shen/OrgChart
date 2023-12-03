@@ -285,6 +285,29 @@ class OrgChart<T> {
     });
   }
 
+  find_the_most_right_pos_x(root: CardNode<T>) {
+    let child_len = root.children.length;
+    let most_child_right_pos = -Infinity;
+
+    for (let i = 0; i < child_len; i++) {
+      let child = root.children[i];
+
+      let max = this.most_right_map.get(child.id);
+      if (max === undefined) {
+        max = this.find_the_most_right_pos_x(child);
+        this.most_right_map.set(child.id, max);
+      }
+
+      if (most_child_right_pos < max) {
+        most_child_right_pos = max;
+      }
+    }
+
+    let current_right_pos = root.pos_x + root.width + this.horizon_gap;
+
+    return Math.max(current_right_pos, most_child_right_pos);
+  }
+
   // todo: we can enhance the performance here
   readjust_by_the_most_right_pos_x_of_a_subtree(left_node: CardNode<T> | undefined, root: CardNode<T>) {
     if (!left_node) {
@@ -294,12 +317,13 @@ class OrgChart<T> {
     let most_right_pos = this.most_right_map.get(left_node.id) || -Infinity;
 
     if (most_right_pos === -Infinity) {
-      traverse_tree_by_level(left_node, (node) => {
-        let new_pos = node.pos_x + node.width + this.horizon_gap;
-        if (most_right_pos < new_pos) {
-          most_right_pos = new_pos;
-        }
-      });
+      most_right_pos = this.find_the_most_right_pos_x(left_node);
+      // traverse_tree_by_level(left_node, (node) => {
+      //   let new_pos = node.pos_x + node.width + this.horizon_gap;
+      //   if (most_right_pos < new_pos) {
+      //     most_right_pos = new_pos;
+      //   }
+      // });
     }
 
     this.most_right_map.set(left_node.id, most_right_pos);
