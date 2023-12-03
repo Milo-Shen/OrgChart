@@ -83,7 +83,8 @@ class CardNode<T> {
 class OrgChart<T> {
   root?: CardNode<T>;
   previous_card?: CardNode<T>;
-  card_map?: Map<string, CardNode<T>>;
+  card_map: Map<string, CardNode<T>>;
+  most_right_map: Map<string, number>;
   card_list: Array<CardNode<T>>;
   card_linked_list: DoublyLinkedList<CardNode<T>>;
   line_list: Array<LineNode>;
@@ -119,6 +120,8 @@ class OrgChart<T> {
     // initialization
     this.card_list = [];
     this.line_list = [];
+    this.card_map = new Map();
+    this.most_right_map = new Map();
     this.line_width = line_width;
     this.line_color = line_color;
     this.line_radius = line_radius;
@@ -148,7 +151,6 @@ class OrgChart<T> {
     this.initialize_fixed_width_height_of_a_node(this.root);
 
     // initial the card map
-    this.card_map = new Map();
     this.card_map.set(this.root.id, this.root);
 
     // generate card node from raw data
@@ -270,7 +272,29 @@ class OrgChart<T> {
     });
   }
 
-  find_the_most_right_start_x_of_a_sub_tree() {}
+  readjust_by_the_most_right_pos_x_of_a_sub_tree(root: CardNode<T>) {
+    if (!this.previous_card) {
+      return;
+    }
+
+    let cached_most_right_pos = this.most_right_map.get(this.previous_card.id);
+    if (cached_most_right_pos !== undefined) {
+      return cached_most_right_pos;
+    }
+
+    let most_right_pos = -Infinity;
+
+    traverse_tree_by_level(this.previous_card, (node) => {
+      let new_pos = node.pos_x + node.width + this.horizon_gap;
+      if (most_right_pos < new_pos) {
+        most_right_pos = new_pos;
+      }
+    });
+
+    this.most_right_map.set(this.previous_card.id, most_right_pos);
+    console.log(root.pos_x, most_right_pos, root.pos_x > most_right_pos);
+    root.pos_x = most_right_pos;
+  }
 
   update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
     // most left node of each subtree
@@ -281,20 +305,14 @@ class OrgChart<T> {
     console.log(`most_left_leaf: ${node.id}`);
 
     if (node.level_previous?.pos_x !== undefined) {
+      // todo: the below code can be ignored
+      // todo: because we already have readjust_by_the_most_right_pos_x_of_a_sub_tree
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
     } else {
       node.pos_x = 0;
     }
 
-    if (this.previous_card) {
-      let most_right_node = this.previous_card;
-
-      while (most_right_node.children.length !== 0) {
-        most_right_node = most_right_node.children[most_right_node.children.length - 1];
-      }
-
-      node.pos_x = most_right_node.pos_x + most_right_node.width + this.horizon_gap;
-    }
+    this.readjust_by_the_most_right_pos_x_of_a_sub_tree(node);
 
     this.previous_card = node;
   }
