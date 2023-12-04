@@ -30,11 +30,6 @@ export enum OrgChartDirection {
   Vertical = "Vertical",
 }
 
-export enum OrgChartMode {
-  "OrgChart" = "OrgChart",
-  "Flexible" = "Flexible",
-}
-
 // Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
 
@@ -101,7 +96,6 @@ class OrgChart<T> {
   vertical_gap: number;
   batch_column_capacity: number;
   direction?: OrgChartDirection;
-  mode?: OrgChartMode;
 
   constructor(
     direction: OrgChartDirection = OrgChartDirection.Vertical,
@@ -117,8 +111,7 @@ class OrgChart<T> {
     line_width: number = 1,
     line_color: string = "#6A6D70",
     line_radius: number = 0,
-    batch_column_capacity: number = 6,
-    mode: OrgChartMode = OrgChartMode.Flexible
+    batch_column_capacity: number = 6
   ) {
     // initialization
     this.card_list = [];
@@ -139,7 +132,6 @@ class OrgChart<T> {
     this.previous_card = undefined;
     this.batch_column_capacity = batch_column_capacity;
     this.direction = direction;
-    this.mode = mode;
 
     // process exception
     if (!card_raw_list || !card_raw_list.length) {
