@@ -314,13 +314,14 @@ class OrgChart<T> {
       return;
     }
 
-    let most_right_pos = this.most_right_map.get(left_node.id) || -Infinity;
+    let left_node_id = left_node.id;
+    let most_right_pos = this.most_right_map.get(left_node_id) || -Infinity;
 
     if (most_right_pos === -Infinity) {
       most_right_pos = this.find_the_most_right_pos_x(left_node);
     }
 
-    this.most_right_map.set(left_node.id, most_right_pos);
+    this.most_right_map.set(left_node_id, most_right_pos);
 
     if (root.pos_x > most_right_pos) {
       return;
