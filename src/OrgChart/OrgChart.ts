@@ -318,12 +318,6 @@ class OrgChart<T> {
 
     if (most_right_pos === -Infinity) {
       most_right_pos = this.find_the_most_right_pos_x(left_node);
-      // traverse_tree_by_level(left_node, (node) => {
-      //   let new_pos = node.pos_x + node.width + this.horizon_gap;
-      //   if (most_right_pos < new_pos) {
-      //     most_right_pos = new_pos;
-      //   }
-      // });
     }
 
     this.most_right_map.set(left_node.id, most_right_pos);
