@@ -167,6 +167,25 @@ class OrgChart<T> {
     this.generate_horizon_pos_and_lines();
   }
 
+  set_the_pos_of_root_node(pos_x: number, pos_y: number) {
+    if (!this.root) {
+      return;
+    }
+
+    let diff_x = pos_x - this.root.pos_x;
+    let diff_y = pos_y - this.root.pos_y;
+
+    traverse_tree_by_level(this.root, (node) => {
+      node.pos_x += diff_x;
+      node.pos_y += diff_y;
+    });
+
+    this.line_list = [];
+    this.calculate_line_pos(this.root);
+
+    return this.line_list;
+  }
+
   generate_horizon_pos_and_lines() {
     if (!this.root) {
       return;

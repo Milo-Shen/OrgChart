@@ -17,6 +17,10 @@ export function is_most_left_leaf_of_a_sub_tree<T>(node: CardNode<T>) {
 }
 
 export function traverse_tree_by_level<T>(node: CardNode<T>, callback: (node: CardNode<T>) => void) {
+  if (!node) {
+    return;
+  }
+
   let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
 
   while (!queue.is_empty()) {

@@ -43,6 +43,7 @@ function App() {
       12,
       2
     );
+
     let render_data = chart.get_render_data();
     console.log(`build org chart time: ${performance.now() - now} ms`);
     set_card_list(render_data);
