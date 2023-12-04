@@ -181,10 +181,12 @@ class OrgChart<T> {
 
   initialize_fixed_width_height_of_a_node(node: CardNode<T>) {
     // process the fixed size type
-    if (this.fixed_size && this.fixed_width && this.fixed_height) {
-      node.width = this.fixed_width;
-      node.height = this.fixed_height;
+    if (!(this.fixed_size && this.fixed_width && this.fixed_height)) {
+      return;
     }
+
+    node.width = this.fixed_width;
+    node.height = this.fixed_height;
   }
 
   initialize_tree_from_raw_data(card_raw_list: Array<any>) {
@@ -285,6 +287,7 @@ class OrgChart<T> {
     });
   }
 
+  // todo: we can enhance the performance here
   find_the_most_right_pos_x(root: CardNode<T>) {
     let child_len = root.children.length;
     let most_child_right_pos = -Infinity;
@@ -308,7 +311,6 @@ class OrgChart<T> {
     return Math.max(current_right_pos, most_child_right_pos);
   }
 
-  // todo: we can enhance the performance here
   readjust_by_the_most_right_pos_x_of_a_subtree(left_node: CardNode<T> | undefined, root: CardNode<T>) {
     if (!left_node) {
       return;
