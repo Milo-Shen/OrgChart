@@ -415,6 +415,29 @@ class OrgChart<T> {
     this.previous_card = node;
   }
 
+  readjust_horizon_pos_of_subtree(node: CardNode<T>) {
+    if (!node.level_previous) {
+      return;
+    }
+
+    let min_pos = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
+    if (min_pos < node.pos_x) {
+      return;
+    }
+
+    let diff = min_pos - node.pos_x;
+    let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
+
+    while (!queue.is_empty()) {
+      let node = queue.shift();
+      node!.pos_x = node!.pos_x + diff;
+      let children = node!.children;
+      for (let i = 0; i < children.length; i++) {
+        queue.push(children[i]);
+      }
+    }
+  }
+
   calculate_line_pos(root: CardNode<T>) {
     traverse_tree_by_level(root, (node) => {
       if (is_leaf(node)) {
