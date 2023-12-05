@@ -38,6 +38,7 @@ class CardNode<T> {
   name: string;
   content?: T;
   children: Array<CardNode<T>>;
+  total_child_count: number;
   parent?: CardNode<T>;
   previous?: CardNode<T>;
   level?: number;
@@ -73,6 +74,7 @@ class CardNode<T> {
     this.most_right_pos_x = 0;
     this.content = content;
     this.mode = mode;
+    this.total_child_count = 0;
   }
 }
 
@@ -286,6 +288,17 @@ class OrgChart<T> {
     });
   }
 
+  calculate_child_count(node: CardNode<T>) {
+    let total = 0;
+
+    for (let i = 0, len = node.children.length; i < len; i++) {
+      let child = node.children[i];
+      total = total + child.total_child_count + 1;
+    }
+
+    node.total_child_count = total;
+  }
+
   readjust_by_negative_pos_x(root: CardNode<T>) {
     if (root.pos_x >= 0) {
       return;
@@ -360,6 +373,8 @@ class OrgChart<T> {
       return;
     }
 
+    console.log("most left", node.id);
+
     if (node.level_previous?.pos_x !== undefined) {
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
     } else {
@@ -377,6 +392,8 @@ class OrgChart<T> {
       return;
     }
 
+    console.log("sibling node", node.id);
+
     this.readjust_by_the_most_right_pos_x_of_a_subtree(node.level_previous, node);
 
     this.previous_card = node;
@@ -386,6 +403,8 @@ class OrgChart<T> {
     if (this.previous_card?.parent !== node) {
       return;
     }
+
+    console.log("parent node", node.id);
 
     if (node.children.length === 1) {
       // if the parent only has one child, the pos_x of the parent node will as same as the child
@@ -407,6 +426,8 @@ class OrgChart<T> {
     while (iterator !== this.root && iterator.previous === undefined) {
       iterator = iterator.parent!;
     }
+
+    this.calculate_child_count(node);
 
     this.readjust_by_the_most_right_pos_x_of_a_subtree(iterator.previous, node);
 
