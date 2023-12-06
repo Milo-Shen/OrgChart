@@ -275,6 +275,7 @@ export class DoublyLinkedList<T> {
   }
 
   map(callback: (card: T) => ReactNode): ReactNode {
+    // todo: to enhance the performance
     let result: ReactNode[] = [];
 
     let p = this.head;
@@ -285,5 +286,14 @@ export class DoublyLinkedList<T> {
     }
 
     return result;
+  }
+
+  for_each(callback: (card: T) => void) {
+    let p = this.head;
+
+    while (p && p.value) {
+      callback(p.value as T);
+      p = p.next;
+    }
   }
 }

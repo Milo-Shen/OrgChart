@@ -30,6 +30,11 @@ export enum OrgChartDirection {
   Vertical = "Vertical",
 }
 
+export enum OrgChartMode {
+  Compact = "Compact",
+  Loose = "Loose",
+}
+
 // Export Constants
 export const chartRenderDefaultData = { card_list: [], line_list: [] };
 
@@ -48,7 +53,6 @@ class CardNode<T> {
   height: number;
   pos_x: number;
   pos_y: number;
-  most_right_pos_x: number;
   mode: CardNodeType;
 
   constructor(
@@ -71,7 +75,6 @@ class CardNode<T> {
     this.height = h;
     this.pos_x = 0;
     this.pos_y = 0;
-    this.most_right_pos_x = 0;
     this.content = content;
     this.mode = mode;
     this.total_child_count = 0;
@@ -83,6 +86,7 @@ class OrgChart<T> {
   previous_card?: CardNode<T>;
   card_map: Map<string, CardNode<T>>;
   most_right_map: Map<string, number>;
+  traversed_nodes: DoublyLinkedList<CardNode<T>>;
   card_list: Array<CardNode<T>>;
   card_linked_list: DoublyLinkedList<CardNode<T>>;
   line_list: Array<LineNode>;
@@ -98,6 +102,7 @@ class OrgChart<T> {
   vertical_gap: number;
   batch_column_capacity: number;
   direction?: OrgChartDirection;
+  mode?: OrgChartMode;
 
   constructor(
     direction: OrgChartDirection = OrgChartDirection.Vertical,
@@ -113,13 +118,15 @@ class OrgChart<T> {
     line_width: number = 1,
     line_color: string = "#6A6D70",
     line_radius: number = 0,
-    batch_column_capacity: number = 6
+    batch_column_capacity: number = 6,
+    mode: OrgChartMode = OrgChartMode.Compact
   ) {
     // initialization
     this.card_list = [];
     this.line_list = [];
     this.card_map = new Map();
     this.most_right_map = new Map();
+    this.traversed_nodes = new DoublyLinkedList();
     this.line_width = line_width;
     this.line_color = line_color;
     this.line_radius = line_radius;
@@ -134,6 +141,7 @@ class OrgChart<T> {
     this.previous_card = undefined;
     this.batch_column_capacity = batch_column_capacity;
     this.direction = direction;
+    this.mode = mode;
 
     // process exception
     if (!card_raw_list || !card_raw_list.length) {
@@ -285,7 +293,53 @@ class OrgChart<T> {
 
       // go to the parent node
       this.update_node_horizon_space_parent_node(node);
+
+      this.traversed_nodes.push(node);
     });
+  }
+
+  readjust_by_diff(root: CardNode<T>, diff: number) {
+    traverse_tree_by_level(root, (node) => {
+      node.pos_x += diff;
+    });
+  }
+
+  readjust_by_collision_detection(root: CardNode<T>) {
+    let most_right_non_collision_pos_x = -Infinity;
+
+    let root_start_x = root.pos_x;
+    const root_start_y = root.pos_y;
+    const root_end_y = root.pos_y + root.height;
+
+    this.traversed_nodes.for_each((node) => {
+      let node_end_x = node.pos_x + node.width;
+      const node_start_y = node.pos_y;
+      const node_end_y = node.pos_y + node.height + this.vertical_gap;
+
+      const is_x_in_boundary = node_end_x >= root_start_x;
+      const is_node_upper_y_in_boundary = node_start_y >= root_start_y && node_start_y <= root_end_y;
+      const is_node_lower_y_in_boundary = node_end_y >= root_start_y && node_end_y <= root_end_y;
+      const is_root_upper_y_in_boundary = root_start_y >= node_start_y && root_start_y <= node_end_y;
+      const is_root_lower_y_in_boundary = root_end_y >= node_start_y && root_end_y <= node_end_y;
+
+      if (
+        is_x_in_boundary &&
+        (is_node_upper_y_in_boundary ||
+          is_node_lower_y_in_boundary ||
+          is_root_upper_y_in_boundary ||
+          is_root_lower_y_in_boundary)
+      ) {
+        const non_collision_pos_x = node_end_x + this.horizon_gap;
+        most_right_non_collision_pos_x = Math.max(most_right_non_collision_pos_x, non_collision_pos_x);
+      }
+    });
+
+    if (root.pos_x >= most_right_non_collision_pos_x) {
+      return;
+    }
+
+    const diff = most_right_non_collision_pos_x - root.pos_x;
+    this.readjust_by_diff(root, diff);
   }
 
   calculate_child_count(node: CardNode<T>) {
@@ -306,9 +360,7 @@ class OrgChart<T> {
 
     let diff = Math.abs(root.pos_x);
 
-    traverse_tree_by_level(root, (node) => {
-      node.pos_x += diff;
-    });
+    this.readjust_by_diff(root, diff);
   }
 
   // todo: we can enhance the performance here
@@ -361,10 +413,7 @@ class OrgChart<T> {
     }
 
     let diff = most_right_pos - root.pos_x;
-
-    traverse_tree_by_level(root, (node) => {
-      node.pos_x = node.pos_x + diff;
-    });
+    this.readjust_by_diff(root, diff);
   }
 
   update_node_horizon_space_most_left_leaf(node: CardNode<T>) {
@@ -373,15 +422,19 @@ class OrgChart<T> {
       return;
     }
 
-    console.log("most left", node.id);
+    // console.log("most left", node.id);
 
-    if (node.level_previous?.pos_x !== undefined) {
+    if (this.fixed_size && node.level_previous?.pos_x !== undefined) {
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
-    } else {
-      node.pos_x = 0;
     }
 
-    this.readjust_by_the_most_right_pos_x_of_a_subtree(this.previous_card, node);
+    if (this.mode === OrgChartMode.Compact) {
+      // check collision detection
+      this.readjust_by_collision_detection(node);
+    } else {
+      // check most right pos x
+      this.readjust_by_the_most_right_pos_x_of_a_subtree(this.previous_card, node);
+    }
 
     this.previous_card = node;
   }
@@ -392,9 +445,15 @@ class OrgChart<T> {
       return;
     }
 
-    console.log("sibling node", node.id);
+    // console.log("sibling node", node.id);
 
-    this.readjust_by_the_most_right_pos_x_of_a_subtree(node.level_previous, node);
+    if (this.mode === OrgChartMode.Compact) {
+      // check collision detection
+      this.readjust_by_collision_detection(node);
+    } else {
+      // check most right pos x
+      this.readjust_by_the_most_right_pos_x_of_a_subtree(node.level_previous, node);
+    }
 
     this.previous_card = node;
   }
@@ -404,7 +463,7 @@ class OrgChart<T> {
       return;
     }
 
-    console.log("parent node", node.id);
+    // console.log("parent node", node.id);
 
     if (node.children.length === 1) {
       // if the parent only has one child, the pos_x of the parent node will as same as the child
@@ -422,14 +481,19 @@ class OrgChart<T> {
       node.pos_x = (first_node.pos_x + last_node.pos_x - node.width) / 2 + (first_node.width + last_node.width) / 4;
     }
 
-    let iterator = node;
-    while (iterator !== this.root && iterator.previous === undefined) {
-      iterator = iterator.parent!;
-    }
-
     this.calculate_child_count(node);
 
-    this.readjust_by_the_most_right_pos_x_of_a_subtree(iterator.previous, node);
+    if (this.mode === OrgChartMode.Compact) {
+      // check collision detection
+      this.readjust_by_collision_detection(node);
+    } else {
+      let iterator = node;
+      while (iterator !== this.root && iterator.previous === undefined) {
+        iterator = iterator.parent!;
+      }
+      // check most right pos x
+      this.readjust_by_the_most_right_pos_x_of_a_subtree(iterator.previous, node);
+    }
 
     this.readjust_by_negative_pos_x(node);
 
@@ -447,16 +511,7 @@ class OrgChart<T> {
     }
 
     let diff = min_pos - node.pos_x;
-    let queue = DoublyLinkedList.from_array<CardNode<T>>([node]);
-
-    while (!queue.is_empty()) {
-      let node = queue.shift();
-      node!.pos_x = node!.pos_x + diff;
-      let children = node!.children;
-      for (let i = 0; i < children.length; i++) {
-        queue.push(children[i]);
-      }
-    }
+    this.readjust_by_diff(node, diff);
   }
 
   calculate_line_pos(root: CardNode<T>) {
