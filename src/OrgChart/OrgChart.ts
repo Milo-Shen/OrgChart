@@ -5,9 +5,9 @@ import { LineNode, LineType } from "./Line";
 import {
   is_even,
   is_leaf,
+  is_most_left_leaf_of_a_sub_tree,
   traverse_tree_by_dfs,
   traverse_tree_by_level,
-  is_most_left_leaf_of_a_sub_tree,
 } from "./utils";
 import { DoublyLinkedList } from "./DoublyLinkedList";
 
@@ -312,8 +312,8 @@ class OrgChart<T> {
     const root_end_y = root.pos_y + root.height;
 
     this.traversed_nodes.for_each((node) => {
-      let node_end_x = node.pos_x + node.width;
-      const node_start_y = node.pos_y;
+      let node_end_x = node.pos_x + node.width + this.horizon_gap;
+      const node_start_y = node.pos_y - this.vertical_gap / 2;
       const node_end_y = node.pos_y + node.height + this.vertical_gap;
 
       const is_x_in_boundary = node_end_x >= root_start_x;
@@ -329,8 +329,7 @@ class OrgChart<T> {
           is_root_upper_y_in_boundary ||
           is_root_lower_y_in_boundary)
       ) {
-        const non_collision_pos_x = node_end_x + this.horizon_gap;
-        most_right_non_collision_pos_x = Math.max(most_right_non_collision_pos_x, non_collision_pos_x);
+        most_right_non_collision_pos_x = Math.max(most_right_non_collision_pos_x, node_end_x);
       }
     });
 
@@ -422,7 +421,7 @@ class OrgChart<T> {
       return;
     }
 
-    // console.log("most left", node.id);
+    console.log("most left", node.id);
 
     if (this.fixed_size && node.level_previous?.pos_x !== undefined) {
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
@@ -445,7 +444,7 @@ class OrgChart<T> {
       return;
     }
 
-    // console.log("sibling node", node.id);
+    console.log("sibling node", node.id);
 
     if (this.mode === OrgChartMode.Compact) {
       // check collision detection
@@ -463,7 +462,7 @@ class OrgChart<T> {
       return;
     }
 
-    // console.log("parent node", node.id);
+    console.log("parent node", node.id);
 
     if (node.children.length === 1) {
       // if the parent only has one child, the pos_x of the parent node will as same as the child
