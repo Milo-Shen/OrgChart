@@ -59,7 +59,7 @@ function App() {
 
     // let data = mock_org_chart_data(~~(Math.random() * 30) + 1, ~~(Math.random() * 5) + 1, true);
     // console.log(JSON.stringify(data));
-    // let data = mock_org_chart_data(500000, 20, false);
+    // let data = mock_org_chart_data(3000, 20, false);
     console.log(`build mock data time: ${performance.now() - now} ms`);
     now = performance.now();
     let chart = new OrgChart<UI5CardInterface>(

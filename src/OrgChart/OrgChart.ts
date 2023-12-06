@@ -314,7 +314,7 @@ class OrgChart<T> {
     this.traversed_nodes.for_each((node) => {
       let node_end_x = node.pos_x + node.width;
       const node_start_y = node.pos_y;
-      const node_end_y = node.pos_y + node.height;
+      const node_end_y = node.pos_y + node.height + this.vertical_gap;
 
       const is_x_in_boundary = node_end_x >= root_start_x;
       const is_node_upper_y_in_boundary = node_start_y >= root_start_y && node_start_y <= root_end_y;
@@ -422,7 +422,7 @@ class OrgChart<T> {
       return;
     }
 
-    console.log("most left", node.id);
+    // console.log("most left", node.id);
 
     if (this.fixed_size && node.level_previous?.pos_x !== undefined) {
       node.pos_x = node.level_previous.pos_x + node.level_previous.width + this.horizon_gap;
@@ -445,7 +445,7 @@ class OrgChart<T> {
       return;
     }
 
-    console.log("sibling node", node.id);
+    // console.log("sibling node", node.id);
 
     if (this.mode === OrgChartMode.Compact) {
       // check collision detection
@@ -463,7 +463,7 @@ class OrgChart<T> {
       return;
     }
 
-    console.log("parent node", node.id);
+    // console.log("parent node", node.id);
 
     if (node.children.length === 1) {
       // if the parent only has one child, the pos_x of the parent node will as same as the child
