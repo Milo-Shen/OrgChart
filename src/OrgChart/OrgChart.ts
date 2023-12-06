@@ -307,37 +307,31 @@ class OrgChart<T> {
   readjust_by_collision_detection(root: CardNode<T>) {
     let most_right_non_collision_pos_x = -Infinity;
 
-    const root_start_x = root.pos_x;
-    const root_end_x = root.pos_x + root.width;
+    let root_start_x = root.pos_x;
     const root_start_y = root.pos_y;
     const root_end_y = root.pos_y + root.height;
 
     this.traversed_nodes.for_each((node) => {
-      const node_start_x = node.pos_x;
-      const node_end_x = node.pos_x + node.width;
+      let node_end_x = node.pos_x + node.width;
       const node_start_y = node.pos_y;
       const node_end_y = node.pos_y + node.height;
 
+      const is_x_in_boundary = node_end_x >= root_start_x;
+      const is_node_upper_y_in_boundary = node_start_y >= root_start_y && node_start_y <= root_end_y;
+      const is_node_lower_y_in_boundary = node_end_y >= root_start_y && node_end_y <= root_end_y;
+      const is_root_upper_y_in_boundary = root_start_y >= node_start_y && root_start_y <= node_end_y;
+      const is_root_lower_y_in_boundary = root_end_y >= node_start_y && root_end_y <= node_end_y;
+
       if (
-        !(
-          node_end_y < root_start_y ||
-          root_end_y < node_start_y ||
-          root_start_x > node_end_x ||
-          node_start_x > root_end_x
-        )
+        is_x_in_boundary &&
+        (is_node_upper_y_in_boundary ||
+          is_node_lower_y_in_boundary ||
+          is_root_upper_y_in_boundary ||
+          is_root_lower_y_in_boundary)
       ) {
         const non_collision_pos_x = node_end_x + this.horizon_gap;
         most_right_non_collision_pos_x = Math.max(most_right_non_collision_pos_x, non_collision_pos_x);
       }
-
-      // const is_x_in_boundary = node_end_x >= root_start_x;
-      // const is_upper_y_in_boundary = node_start_y >= root_start_y && node_start_y <= root_end_y;
-      // const is_lower_y_in_boundary = node_end_y >= root_start_y && node_end_y <= root_end_y;
-      //
-      // if (is_x_in_boundary && (is_upper_y_in_boundary || is_lower_y_in_boundary)) {
-      //   const non_collision_pos_x = node_end_x + this.horizon_gap;
-      //   most_right_non_collision_pos_x = Math.max(most_right_non_collision_pos_x, non_collision_pos_x);
-      // }
     });
 
     if (root.pos_x >= most_right_non_collision_pos_x) {
