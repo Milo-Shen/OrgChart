@@ -313,7 +313,7 @@ class OrgChart<T> {
 
     this.traversed_nodes.for_each((node) => {
       let node_end_x = node.pos_x + node.width + this.horizon_gap;
-      const node_start_y = node.pos_y - this.vertical_gap / 2;
+      const node_start_y = node.pos_y - this.vertical_gap / 2 - this.line_width;
       const node_end_y = node.pos_y + node.height + this.vertical_gap;
 
       const is_x_in_boundary = node_end_x >= root_start_x;
